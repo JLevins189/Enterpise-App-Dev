@@ -43,24 +43,11 @@
     }
   });
 
-  // Back to top button
-  $(window).scroll(function () {
-    if ($(this).scrollTop() > 300) {
-      $(".back-to-top").fadeIn("slow");
-    } else {
-      $(".back-to-top").fadeOut("slow");
-    }
-  });
-  $(".back-to-top").click(function () {
-    $("html, body").animate({ scrollTop: 0 }, 1500, "easeInOutExpo");
-    return false;
-  });
-
   // Typed Initiate
   if ($(".typed-text-output").length == 1) {
     var typed_strings = $(".typed-text").text();
     var typed = new Typed(".typed-text-output", {
-      strings: typed_strings.split(", "),
+      strings: typed_strings.split(","),
       typeSpeed: 100,
       backSpeed: 20,
       smartBackspace: false,
@@ -68,25 +55,10 @@
     });
   }
 
-  // // Modal Video
-  // var $videoSrc;
-  // $('.btn-play').click(function () {
-  //     $videoSrc = $(this).data("src");
-  // });
-  // console.log($videoSrc);
-  // $('#videoModal').on('shown.bs.modal', function (e) {
-  //     $("#video").attr('src', $videoSrc + "?autoplay=1&amp;modestbranding=1&amp;showinfo=0");
-  // })
-  // $('#videoModal').on('hide.bs.modal', function (e) {
-  //     $("#video").attr('src', $videoSrc);
-  // })
-
   // Facts counter
   const counterUp = window.counterUp.default;
-
   const callback = (entries) => {
     entries.forEach((entry) => {
-      console.log(entry);
       const el = entry.target;
       if (entry.isIntersecting && !el.classList.contains("is-visible")) {
         counterUp(el, {
@@ -97,7 +69,6 @@
       }
     });
   };
-
   const IO = new IntersectionObserver(callback, { threshold: 1 });
 
   const counters = document.querySelectorAll(".counter");
@@ -105,7 +76,7 @@
     IO.observe(counter);
   });
 
-  // Skills
+  // Sponsorships
   $(".skill").waypoint(
     function () {
       $(".progress .progress-bar").each(function () {
@@ -114,25 +85,4 @@
     },
     { offset: "80%" }
   );
-
-  // Portfolio isotope and filter
-  var portfolioIsotope = $(".portfolio-container").isotope({
-    itemSelector: ".portfolio-item",
-    layoutMode: "fitRows",
-  });
-  $("#portfolio-flters li").on("click", function () {
-    $("#portfolio-flters li").removeClass("active");
-    $(this).addClass("active");
-
-    portfolioIsotope.isotope({ filter: $(this).data("filter") });
-  });
-
-  // Testimonials carousel
-  $(".testimonial-carousel").owlCarousel({
-    autoplay: true,
-    smartSpeed: 1000,
-    items: 1,
-    dots: true,
-    loop: true,
-  });
 })(jQuery);
