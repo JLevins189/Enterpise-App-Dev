@@ -77,7 +77,7 @@
   });
 
   // Sponsorships
-  $(".skill").waypoint(
+  $(".sponsorships").waypoint(
     function () {
       $(".progress .progress-bar").each(function () {
         $(this).css("width", $(this).attr("aria-valuenow") + "%");
