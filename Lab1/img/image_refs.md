@@ -20,3 +20,7 @@
 #### Prime Years
 
 - Balon d'Ors: https://nftcalendar.io/storage/uploads/events/2022/5/jEIAouQ6wTSpo6mWEYjRRG96Dm9GYf2KiVJlwDhJ.jpg
+
+#### Currently
+
+- World Cup Trophy: https://cloudfront-us-east-2.images.arcpublishing.com/reuters/TVO76CDW5VOCXOIYBW67B76BVY.jpg
