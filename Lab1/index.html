@@ -128,7 +128,7 @@
             <div class="d-flex align-items-center pt-5">
               <button
                 type="button"
-                class="btn-play"
+                class="btn-play position-relative d-block rounded-circle bg-primary border-0"
                 data-bs-toggle="modal"
                 data-src="https://www.youtube.com/watch?v=5twveLmWhvI"
                 data-bs-target="#videoModal"
@@ -192,7 +192,7 @@
           <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
             <div class="d-flex align-items-center mb-5">
               <div class="years flex-shrink-0 text-center me-4">
-                <h5 class="mb-0">Born in</h5>
+                <h5 class="mb-0 me-4">Born in</h5>
                 <h1 class="display-1 mb-0">1987</h1>
               </div>
               <h3 class="lh-base mb-0">in Rosario, Santa Fe, Argentina</h3>
@@ -697,10 +697,7 @@
             <h1 class="display-5 mb-0">Prime Years</h1>
           </div>
         </div>
-        <div
-          class="row g-4 portfolio-container wow fadeInUp"
-          data-wow-delay="0.1s"
-        >
+        <div class="row g-4 wow fadeInUp" data-wow-delay="0.1s">
           <div class="col-lg-4 col-md-6 portfolio-item first">
             <div class="portfolio-img rounded overflow-hidden">
               <img class="img-fluid" src="img/messi-ballon-d-or.webp" alt="" />
@@ -724,13 +721,15 @@
             </div>
           </div>
           <div class="col-lg-4 col-md-6 portfolio-item first">
-            <div class="portfolio-img rounded overflow-hidden">
+            <div class="position-relative rounded overflow-hidden">
               <img
                 class="img-fluid"
                 src="img/messi-laliga-trophy.jpeg"
                 alt=""
               />
-              <div class="portfolio-btn">
+              <div
+                class="portfolio-btn d-flex align-items-center h-100 w-100 p-4 bg-primary position-absolute top-0 start-0"
+              >
                 <h6 class="text-secondary">
                   Messi has won 10 La Liga titles in his career.
                 </h6>
@@ -933,7 +932,9 @@
     <!-- Copyright End -->
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"
+    <a
+      href="#"
+      class="btn btn-primary btn-lg-square text-white back-to-top position-fixed p-0 d-flex align-items-center justify-content-center fw-normal"
       ><i class="bi bi-arrow-up"></i
     ></a>
 
