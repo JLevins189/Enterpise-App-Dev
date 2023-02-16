@@ -7,7 +7,7 @@
 }
 
 .back-to-top {
-    display: none;
+    display: flex;
     right: 3rem;
     bottom: 3rem;
     z-index: 99;

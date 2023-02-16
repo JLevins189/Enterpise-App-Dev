@@ -1,5 +1,6 @@
 (function ($) {
   "use strict";
+  $("#back-to-top").hide();
 
   // Spinner
   var spinner = function () {
@@ -16,7 +17,7 @@
 
   // Navbar on scrolling
   $(window).scroll(function () {
-    if ($(this).scrollTop() > 300) {
+    if ($(this).scrollTop() > 350) {
       $(".navbar").fadeIn("slow").css("display", "flex");
     } else {
       $(".navbar").fadeOut("slow").css("display", "none");
@@ -41,6 +42,19 @@
         $(this).closest("a").addClass("active");
       }
     }
+  });
+
+  // Back to top button
+  $(window).scroll(function () {
+    if ($(this).scrollTop() > 600) {
+      $(".back-to-top").fadeIn(400);
+    } else {
+      $(".back-to-top").fadeOut(800);
+    }
+  });
+  $(".back-to-top").click(function () {
+    $("html, body").animate({ scrollTop: 0 }, 1500, "easeInOutExpo");
+    return false;
   });
 
   // Typed Initiate
