@@ -1,12 +1,10 @@
-function TableRow() {
+function TableRow({ dataObject }) {
   return (
     <tr>
-      <td>1</td>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
+      {Object.values(dataObject).map((value) => (
+        <td>{value}</td>
+      ))}
     </tr>
   );
 }
-
 export default TableRow;
