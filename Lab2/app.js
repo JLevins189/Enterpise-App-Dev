@@ -1,11 +1,17 @@
-const http = require("http");
-const portNumber = 8081;
+const serverPort = 3000;
+const express = require("express");
+const routes = require("./routes");
+const bodyParser = require("body-parser");
+const { request } = require("express");
+const path = require("path");
 
-http
-  .createServer(function (request, response) {
-    response.writeHead(200, { "Content-Type": "text/plain" });
-    response.end("Hello World\n");
-  })
-  .listen(portNumber);
+const app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, "public")));
 
-console.log(`Server running at http://127.0.0.1:${portNumber}/`);
+app.use(routes);
+
+app.listen(serverPort, () => {
+  console.log(`Server listening on port ${serverPort}`);
+});
