@@ -21,7 +21,7 @@ router.get("/coastline", (req, res) => {
       "..",
       "public",
       "country-objects",
-      "country-by-continent.json"
+      "country-by-coastline.json"
     )
   );
 });
