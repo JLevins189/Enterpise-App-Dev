@@ -18,24 +18,31 @@ import LoadingComponent from "LoadingComponent";
 
 function App() {
   const [requestComplete, setRequestComplete] = useState(false);
+  const [requestStarted, setRequestStarted] = useState(false);
   const [errorOccurred, setErrorOccurred] = useState(false);
   const [showTable, setShowTable] = useState(false);
   const [countryData, setCountryData] = useState([]);
 
   const toggleShowTable = () => {
-    setShowTable((prev) => setShowTable(!prev));
-    !requestComplete && getData();
+    setShowTable((prev) => !prev);
+    /* Only allow one request if connection slow */
+    setRequestStarted((prev) => {
+      if (prev === false) {
+        !requestComplete && getData();
+      }
+      return true;
+    });
   };
 
   const getData = async () => {
     try {
       const [
-        capitalCities,
-        coastlines,
-        continents,
-        currencies,
-        domains,
-        flags,
+        capitalCitiesResponse,
+        coastlinesResponse,
+        continentsResponse,
+        currenciesResponse,
+        domainsResponse,
+        flagsResponse,
       ] = await Promise.all([
         getCapitalCitiesRequest(),
         getCoastlineRequest(),
@@ -44,16 +51,18 @@ function App() {
         getDomainRequest(),
         getFlagRequest(),
       ]);
+
       //Combine Arrays of objects into one master array
       combineCountryData({
-        capitalCities,
-        coastlines,
-        continents,
-        currencies,
-        domains,
-        flags,
+        capitalCities: capitalCitiesResponse.data,
+        coastlines: coastlinesResponse.data,
+        continents: continentsResponse.data,
+        currencies: currenciesResponse.data,
+        domains: domainsResponse.data,
+        flags: flagsResponse.data,
       });
     } catch (err) {
+      console.error(err);
       setErrorOccurred(true);
     } finally {
       setRequestComplete(true);
@@ -68,7 +77,41 @@ function App() {
     domains,
     flags,
   }) => {
-    console.log(capitalCities);
+    setCountryData(
+      capitalCities.map((countryObj) => {
+        const matchingCoastline = coastlines.find(
+          (coastline) => coastline.country === countryObj.country
+        );
+        const matchingContinent = continents.find(
+          (continent) => continent.country === countryObj.country
+        );
+        const matchingCurrency = currencies.find(
+          (currency) => currency.country === countryObj.country
+        );
+        const matchingDomain = domains.find(
+          (domain) => domain.country === countryObj.country
+        );
+        const matchingFlag = flags.find(
+          (flag) => flag.country === countryObj.country
+        );
+        console.log({
+          ...countryObj,
+          ...matchingCoastline,
+          ...matchingContinent,
+          ...matchingCurrency,
+          ...matchingDomain,
+          ...matchingFlag,
+        });
+        return {
+          ...countryObj,
+          ...matchingCoastline,
+          ...matchingContinent,
+          ...matchingCurrency,
+          ...matchingDomain,
+          ...matchingFlag,
+        };
+      })
+    );
   };
 
   return (
@@ -89,13 +132,26 @@ function App() {
               <Table>
                 <thead>
                   <tr>
-                    <th>#</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Username</th>
+                    <th>Country</th>
+                    <th>Continent</th>
+                    <th>Coastline Length</th>
+                    <th>Currency Name</th>
+                    <th>Internet Domain</th>
+                    <th>Flag</th>
                   </tr>
                 </thead>
-                <tbody>{/* <TableRow /> */}</tbody>
+                <tbody>
+                  {countryData.map((country) => (
+                    <TableRow
+                      country={country.country}
+                      continent={country.continent}
+                      coastline={country.costline}
+                      currency={country.currency_name}
+                      domain={country.tld}
+                      flag={country.flag_base64}
+                    />
+                  ))}
+                </tbody>
               </Table>
             </Col>
           </Row>
