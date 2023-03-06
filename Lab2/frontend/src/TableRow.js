@@ -1,13 +1,13 @@
 function CountryTableRow(props) {
-  const { country, continent, coastline, currency, domain, flag } = props;
+  const { country, continent, coastline, currency, domain, flag, row } = props;
   return (
     <tr>
-      <td>{country}</td>
-      <td>{continent}</td>
-      <td>{coastline}</td>
-      <td>{currency}</td>
-      <td>{domain}</td>
-      <td>
+      <td id={`${row}-1`}>{country}</td>
+      <td id={`${row}-2`}>{continent}</td>
+      <td id={`${row}-3`}>{coastline}</td>
+      <td id={`${row}-4`}>{currency}</td>
+      <td id={`${row}-5`}>{domain}</td>
+      <td id={`${row}-6`}>
         <img src={flag} width={100}></img>
       </td>
     </tr>
