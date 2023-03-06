@@ -3,7 +3,7 @@ import Row from "react-bootstrap/Row";
 
 function LoadingComponent() {
   return (
-    <Row>
+    <Row style={{ height: "20vh" }}>
       <Spinner className="mt-2 mx-auto" />
     </Row>
   );
