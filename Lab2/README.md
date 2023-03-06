@@ -24,6 +24,14 @@
 - Node server
 - AJAX calls to node server supplying JSON
 - Paragraphs to explains purpose of program & technologies.
+- Hover effect on table
+- Effects:
+  - Collapse technology Section
+  - Show and hide AJAX section using caret icons
+  - Slide in AJAX text
+  - Fade up earth Image
+  - Bounce in table
+  - Loading spinner while waiting for network request
 
 ### Discrepancies in completed parts due to selected technologies
 
@@ -34,7 +42,7 @@ A variation of a 2D array was used (a merged array of objects)
 to modify the properties of the website" - jQuery is not being used but React was used with buttons to modify website properties.
 
 "Use JQUERY to enable the user to select a specific cell of the table and change
-its colour once it is selected like in here" - again not using jQuery
+its colour once it is selected like in here" - again not using jQuery but done using React
 
 ### Parts Missing
 
