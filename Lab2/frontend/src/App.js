@@ -16,8 +16,11 @@ import Button from "react-bootstrap/Button";
 import TableRow from "TableRow";
 import LoadingComponent from "LoadingComponent";
 import ExplainProgramComponent from "ExplainProgramComponent";
+import EarthImage from "EarthImage";
+import { CSSTransition } from "react-transition-group";
 
 function App() {
+  const [clickedCellId, setClickedCellId] = useState(null);
   const [requestComplete, setRequestComplete] = useState(false);
   const [requestStarted, setRequestStarted] = useState(false);
   const [errorOccurred, setErrorOccurred] = useState(false);
@@ -42,7 +45,7 @@ function App() {
           !requestComplete && getData();
           const timeToRead = (new Date() - currentTime) / 1000; //1000 = ms-> sec
           setTimeToGetData(timeToRead);
-        }, 1); //TODO change back to 5000
+        }, 5000);
       }
       return true;
     });
@@ -50,6 +53,15 @@ function App() {
 
   const toggleShowAllCountries = () => {
     setShowAllCountries((prev) => !prev);
+  };
+
+  const handleCellClick = (e) => {
+    const prevSelectedElement = document.getElementById(clickedCellId);
+    if (prevSelectedElement) {
+      prevSelectedElement.classList.remove("selected");
+    }
+    e.target.classList.add("selected");
+    setClickedCellId(e.target.id);
   };
 
   //Network requests for country data
@@ -104,22 +116,33 @@ function App() {
     flags,
   }) => {
     setCountryData(
+      // If no corresponsing object in other object or if value if nullish set to unknown
       capitalCities.map((countryObj) => {
         const matchingCoastline = coastlines.find(
           (coastline) => coastline.country === countryObj.country
-        );
+        ) || { country: countryObj.country, costline: "Unknown" };
+        matchingCoastline.costline = matchingCoastline.costline ?? "Unknown";
+
         const matchingContinent = continents.find(
           (continent) => continent.country === countryObj.country
-        );
+        ) || { country: countryObj.country, continent: "Unknown" };
+        matchingContinent.continent = matchingContinent.continent ?? "Unknown";
+
         const matchingCurrency = currencies.find(
           (currency) => currency.country === countryObj.country
-        );
+        ) || { country: countryObj.country, currency_name: "Unknown" };
+        matchingCurrency.currency_name =
+          matchingCurrency.currency_name ?? "Unknown";
+
         const matchingDomain = domains.find(
           (domain) => domain.country === countryObj.country
-        );
+        ) || { country: countryObj.country, tld: "Unknown" };
+        matchingDomain.tld = matchingDomain.tld ?? "Unknown";
+
         const matchingFlag = flags.find(
           (flag) => flag.country === countryObj.country
-        );
+        ); //Allow no flag
+
         return {
           ...countryObj,
           ...matchingCoastline,
@@ -139,6 +162,10 @@ function App() {
           <ExplainProgramComponent />
         </Col>
       </Row>
+
+      <EarthImage />
+
+      {/* Table components */}
       <Row>
         <Col>
           <Button className="mt-4 mb-4 px-5 py-2" onClick={toggleShowTable}>
@@ -171,7 +198,12 @@ function App() {
             </Row>
             <Row>
               <Col>
-                <Table responsive="xs" striped bordered>
+                <Table
+                  className="animate__animated animate__backInRight"
+                  responsive="xs"
+                  striped
+                  bordered
+                >
                   <thead className="bg-info">
                     <tr>
                       <th>Country</th>
@@ -182,12 +214,12 @@ function App() {
                       <th>Flag</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody onClick={handleCellClick}>
                     {countryData.map((country, index) => {
                       //Break after 20 countries if thats all thats requested
                       if (
                         !showAllCountries &&
-                        index > smallTableNumberOfItems
+                        index >= smallTableNumberOfItems
                       ) {
                         return;
                       }
@@ -199,6 +231,7 @@ function App() {
                           currency={country.currency_name}
                           domain={country.tld}
                           flag={country.flag_base64}
+                          row={index}
                           key={country.country}
                         />
                       );
@@ -211,7 +244,9 @@ function App() {
         ) : (
           <ErrorComponent />
         )
-      ) : null}
+      ) : (
+        <div style={{ height: "20vh" }}></div>
+      )}
     </Container>
   );
 }
