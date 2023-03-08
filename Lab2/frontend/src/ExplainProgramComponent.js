@@ -87,7 +87,7 @@ function ExplainProgramComponent() {
                 http library of Node.
               </li>
               <li>
-                Axios was preffered to fetch as it has much better
+                Axios was preferred to fetch as it has much better
                 error-handling. Fetch for some reason does not produce
                 exceptions on non 2xx status codes and causes unreadable code
                 for those cases.
