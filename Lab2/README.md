@@ -35,15 +35,20 @@
 
 ### Discrepancies in completed parts due to selected technologies
 
-As agreed I used React, Axios, Express as opposed to jQuery. My Node server did not serve an index.html from the root as I was using React and used a separate dev server on a different port to do this.
-A variation of a 2D array was used (a merged array of objects)
+- As agreed I used React, Axios, Express as opposed to jQuery. My Node server did not serve an index.html from the root as I was using React and used a separate dev server on a different port to do this.
 
-"In addition to the previous functionalities, include several buttons that use jQuery
-to modify the properties of the website" - jQuery is not being used but React was used with buttons to modify website properties.
+- A variation of a 2D array was used (a merged array of objects)
 
-"Use JQUERY to enable the user to select a specific cell of the table and change
-its colour once it is selected like in here" - again not using jQuery but done using React
+- "In addition to the previous functionalities, include several buttons that use jQuery
+  to modify the properties of the website" - jQuery is not being used but React was used with buttons to modify website properties.
+
+- "Use JQUERY to enable the user to select a specific cell of the table and change
+  its colour once it is selected like in here" - again not using jQuery but done using React
 
 ### Parts Missing
 
 - None
+
+### Parts Added
+
+- Search by country: name, capital,continent,currency name, internet domain
