@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   getCapitalCitiesRequest,
   getCoastlineRequest,
@@ -13,11 +13,11 @@ import Table from "react-bootstrap/Table";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 import TableRow from "TableRow";
 import LoadingComponent from "LoadingComponent";
 import ExplainProgramComponent from "ExplainProgramComponent";
 import EarthImage from "EarthImage";
-import { CSSTransition } from "react-transition-group";
 
 function App() {
   const [clickedCellId, setClickedCellId] = useState(null);
@@ -27,6 +27,7 @@ function App() {
   const [showTable, setShowTable] = useState(false);
   const [showAllCountries, setShowAllCountries] = useState(false);
   const [timeToGetData, setTimeToGetData] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
   const [countryData, setCountryData] = useState([]);
 
   const folderName = "country-objects";
@@ -35,6 +36,24 @@ function App() {
     `Folder: "${folderName}" has been read, the table has been created and has taken ${time} seconds.`;
   const smallTableNumberOfItems = 20;
 
+  //UseMemo preventing unnecessary rerenders -> filter countrydata by search query
+  const filteredCountries = useMemo(() => {
+    return countryData.filter((country) => {
+      return (
+        country?.country?.toLowerCase()?.includes(searchQuery.toLowerCase()) ||
+        country?.city?.toLowerCase()?.includes(searchQuery.toLowerCase()) ||
+        country?.continent
+          ?.toLowerCase()
+          ?.includes(searchQuery.toLowerCase()) ||
+        country?.currency_name
+          ?.toLowerCase()
+          ?.includes(searchQuery.toLowerCase()) ||
+        country?.tld?.toLowerCase()?.includes(searchQuery.toLowerCase())
+      );
+    });
+  }, [countryData, searchQuery]);
+
+  //If first show of table -> retrieve data for table and time the length
   const toggleShowTable = () => {
     setShowTable((prev) => !prev);
     /* Only allow one request in case connection slow */
@@ -55,6 +74,7 @@ function App() {
     setShowAllCountries((prev) => !prev);
   };
 
+  //Remove selection from prev selected and assign to new
   const handleCellClick = (e) => {
     const prevSelectedElement = document.getElementById(clickedCellId);
     if (prevSelectedElement) {
@@ -83,7 +103,7 @@ function App() {
         getFlagRequest(),
       ]);
 
-      //Combine Arrays of objects into one master array
+      //Combine Arrays of objects into one master array of bbjects
       combineCountryData({
         capitalCities: capitalCitiesResponse.data,
         coastlines: coastlinesResponse.data,
@@ -116,8 +136,12 @@ function App() {
     flags,
   }) => {
     setCountryData(
-      // If no corresponsing object in other object or if value if nullish set to unknown
+      // If no corresponding object in other object (|| Operator) or if value if nullish (?? Operator) set to unknown
       capitalCities.map((countryObj) => {
+        if (!countryObj.city) {
+          countryObj.city = "Unknown";
+        }
+
         const matchingCoastline = coastlines.find(
           (coastline) => coastline.country === countryObj.country
         ) || { country: countryObj.country, costline: "Unknown" };
@@ -141,7 +165,7 @@ function App() {
 
         const matchingFlag = flags.find(
           (flag) => flag.country === countryObj.country
-        ); //Allow no flag
+        ); //Allow no flag (blank)
 
         return {
           ...countryObj,
@@ -159,10 +183,11 @@ function App() {
     <Container className="mt-2">
       <Row>
         <Col>
+          {/* Technology Explanation etc. */}
           <ExplainProgramComponent />
         </Col>
       </Row>
-
+      {/* Toggable Image plus animations */}
       <EarthImage />
 
       {/* Table components */}
@@ -197,6 +222,16 @@ function App() {
               </Col>
             </Row>
             <Row>
+              <Col className="mb-3" xs={{ span: 3, offset: 9 }}>
+                <Form>
+                  <Form.Control
+                    type="text"
+                    placeholder="Search Countries"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  ></Form.Control>
+                </Form>
+              </Col>
               <Col>
                 <Table
                   className="animate__animated animate__backInRight"
@@ -207,6 +242,7 @@ function App() {
                   <thead className="bg-info">
                     <tr>
                       <th>Country</th>
+                      <th>Capital</th>
                       <th>Continent</th>
                       <th>Coastline Length</th>
                       <th>Currency Name</th>
@@ -215,8 +251,9 @@ function App() {
                     </tr>
                   </thead>
                   <tbody onClick={handleCellClick}>
-                    {countryData.map((country, index) => {
-                      //Break after 20 countries if thats all thats requested
+                    {/* Filtered Array due to search query -> Empty search = No filtering */}
+                    {filteredCountries.map((country, index) => {
+                      //Break after 20 countries if thats all thats requested else continue
                       if (
                         !showAllCountries &&
                         index >= smallTableNumberOfItems
@@ -226,6 +263,7 @@ function App() {
                       return (
                         <TableRow
                           country={country.country}
+                          capital={country.city}
                           continent={country.continent}
                           coastline={country.costline}
                           currency={country.currency_name}
@@ -242,9 +280,11 @@ function App() {
             </Row>
           </>
         ) : (
+          // If error occurs
           <ErrorComponent />
         )
       ) : (
+        //Whitespace where table will show until requested
         <div style={{ height: "20vh" }}></div>
       )}
     </Container>
