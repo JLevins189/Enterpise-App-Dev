@@ -110,21 +110,21 @@ router.post("/", (req, res) => {
   //Convert from hex
   console.log("Request Received for new colour");
   const [r, g, b] = hexStringToRgbValues(hexString);
-  console.log("rgb", r, g, b);
+  const hsl = rgbToHsl(r, g, b);
   const newColour = {
     colorId: colours.length,
     hexString,
     rgb: { r, g, b },
-    // hsl,
+    hsl,
     name,
   };
 
-  // colours.push(newColor);
+  colours.push(newColour);
 
-  // fs.writeFileSync(
-  //   path.join(__dirname, "..", "public", "data.json"),
-  //   JSON.stringify(colours, null, 2)
-  // );
+  fs.writeFileSync(
+    path.join(__dirname, "..", "public", "data.json"),
+    JSON.stringify(colours, null, 2)
+  );
 
   res.status(201).send(newColour);
 });
