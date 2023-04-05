@@ -80,12 +80,12 @@ router.get("/:id", (req, res) => {
   }
   //LOG REQ
   console.log(`GET request received for colour with id ${id}`);
-  const myObject = colours.find((obj) => obj.colorId === parseInt(id));
+  const selectedColour = colours.find((obj) => obj.colorId === id);
 
   res.setHeader("Cache-Control", "public, max-age=3600");
   res.setHeader("Expires", new Date(Date.now() + cacheExpiry).toUTCString());
-  myObject
-    ? res.send(myObject)
+  selectedColour
+    ? res.send(selectedColour)
     : res.status(404).send({ error: "Colour not found" });
 });
 
@@ -130,17 +130,68 @@ router.post("/", (req, res) => {
 });
 
 router.put("/:id", (req, res) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
+  const { hexString, name } = req.body; //Take in hex, convert to other formats
+
+  //Path validation
+  if (isNaN(id)) {
+    console.error(`Invalid colourId param ${req.params.id}`);
+    res.status(400).send({
+      error: `Invalid id ${req.params.id} entered. Please Enter a number`,
+    });
+    return;
+  }
+  //Body Validation
+  if (!hexValueRegex.test(hexString)) {
+    res.status(400).send({
+      error: `${hexString} is not a valid hex colour string`,
+      field: "hexString",
+    });
+    return;
+  }
+  if (!colourNameRegex.test(name)) {
+    res.status(400).send({
+      error: `${name} is not a valid colour name. Do not use special characters`,
+      field: "name",
+    });
+    return;
+  }
+
   console.log(`PUT request received for colour with id ${id}`);
-  const myObject = myArray.find((obj) => obj.id === 2);
-  myObject
-    ? res.send(myObject)
-    : res.status(404).send({ error: "Object not found" });
+  const selectedColourIndex = colours.findIndex((obj) => obj.colorId === id);
+
+  //Convert from hex
+  const [r, g, b] = hexStringToRgbValues(hexString);
+  const hsl = rgbToHsl(r, g, b);
+
+  const newColour = {
+    colorId: id,
+    hexString,
+    rgb: { r, g, b },
+    hsl,
+    name,
+  };
+
+  let statusCode = 200; //201 if new obj
+
+  if (selectedColourIndex !== -1) {
+    //if exists already
+    colours[selectedColourIndex] = newColour;
+  } else {
+    colours.push(newColour); //add new colour
+    statusCode = 201;
+  }
+  res.status(statusCode).send({ colour: newColour, uri: `/colours/${id}` });
+
+  fs.writeFileSync(
+    path.join(__dirname, "..", "public", "data.json"),
+    JSON.stringify(colours, null, 2)
+  );
 });
 
 router.delete("/:id", (req, res) => {
   const id = req.params.id;
-  const filteredArray = myArray.filter((obj) => obj.id !== 2);
+  const filteredArray = myArray.filter((obj) => obj.id !== id);
 
   console.log(`DELETE request received for colour with id ${id}`);
   res.send("1"); //TODO update to object
