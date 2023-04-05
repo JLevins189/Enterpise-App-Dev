@@ -1,9 +1,10 @@
 import Container from "react-bootstrap/Container";
-import TitleHeader from "./Navbar";
+import Navbar from "./Navbar";
+
 function App() {
   return (
     <>
-      <TitleHeader />
+      <Navbar />
       <Container fluid style={{ maxWidth: "1920px" }}></Container>
     </>
   );
