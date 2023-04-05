@@ -190,11 +190,33 @@ router.put("/:id", (req, res) => {
 });
 
 router.delete("/:id", (req, res) => {
-  const id = req.params.id;
-  const filteredArray = myArray.filter((obj) => obj.id !== id);
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) {
+    console.error(`Invalid colourId param ${req.params.id}`);
+    res.status(400).send({
+      error: `Invalid id ${req.params.id} entered. Please Enter a number`,
+    });
+    return;
+  }
 
   console.log(`DELETE request received for colour with id ${id}`);
-  res.send("1"); //TODO update to object
+
+  const selectedColourIndex = colours.findIndex((obj) => obj.colorId === id);
+  if (selectedColourIndex === -1) {
+    //Not Found
+    console.log(`Colour with id ${id} not found`);
+    res.status(404).send("Colour could not be found");
+    return;
+  }
+
+  colours.splice(selectedColourIndex, 1);
+  fs.writeFileSync(
+    path.join(__dirname, "..", "public", "data.json"),
+    JSON.stringify(colours, null, 2)
+  );
+
+  console.log(`Colour with id ${id} deleted`);
+  res.send("Colour successfully deleted");
 });
 
 router.put("/", (req, res) => {
