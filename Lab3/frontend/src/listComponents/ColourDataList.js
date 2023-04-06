@@ -4,6 +4,7 @@ import Table from "react-bootstrap/Table";
 function ColourDataList({
   colourData,
   setEditColourModalOpen,
+  setDeleteColourModalOpen,
   setSelectedColourId,
 }) {
   return (
@@ -26,6 +27,7 @@ function ColourDataList({
             colourElement={colourElement}
             key={colourElement?.colorId}
             setEditColourModalOpen={setEditColourModalOpen}
+            setDeleteColourModalOpen={setDeleteColourModalOpen}
             setSelectedColourId={setSelectedColourId}
           />
         ))}

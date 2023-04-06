@@ -7,6 +7,7 @@ import LoadingSpinner from "util/LoadingSpinner";
 import FetchError from "util/FetchError";
 import AddColourModal from "modals/AddColourModal";
 import EditColourModal from "modals/EditColourModal";
+import DeleteColourModal from "modals/DeleteColourModal";
 import Container from "react-bootstrap/Container";
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
 
   const [addColourModalOpen, setAddColourModalOpen] = useState(false);
   const [editColourModalOpen, setEditColourModalOpen] = useState(false);
-  const [deleteColourModalOpen, setDeleteColourModalOpen] = useState(true);
+  const [deleteColourModalOpen, setDeleteColourModalOpen] = useState(false);
 
   const [selectedColourId, setSelectedColourId] = useState(-1); //for edit/delete button
   const [colourData, setColourData] = useState([]);
@@ -25,7 +26,6 @@ function App() {
     const getColourData = async () => {
       try {
         const response = await axiosInstance.get("/colours");
-        console.log(response?.data[1]);
         setColourData(response?.data);
       } catch (err) {
         console.log(err);
@@ -51,6 +51,7 @@ function App() {
             <ColourDataList
               colourData={colourData}
               setEditColourModalOpen={setEditColourModalOpen}
+              setDeleteColourModalOpen={setDeleteColourModalOpen}
               setSelectedColourId={setSelectedColourId}
             />
             <AddColourModal
@@ -58,13 +59,21 @@ function App() {
               setModalOpen={setAddColourModalOpen}
               setColourData={setColourData}
             />
-            {editColourModalOpen && (
+            {editColourModalOpen && selectedColourId !== -1 && (
               <EditColourModal
                 modalOpen={editColourModalOpen}
                 setModalOpen={setEditColourModalOpen}
                 colourData={colourData}
                 setColourData={setColourData}
                 selectedColourId={selectedColourId}
+              />
+            )}
+            {deleteColourModalOpen && (
+              <DeleteColourModal
+                modalOpen={deleteColourModalOpen}
+                setModalOpen={setDeleteColourModalOpen}
+                colourData={colourData}
+                setColourData={setColourData}
               />
             )}
           </>

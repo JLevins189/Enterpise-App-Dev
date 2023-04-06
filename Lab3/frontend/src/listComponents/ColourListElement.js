@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 function ColourListElement({
   colourElement,
   setEditColourModalOpen,
+  setDeleteColourModalOpen,
   setSelectedColourId,
 }) {
   // <th>ID</th>
@@ -21,11 +22,14 @@ function ColourListElement({
   };
 
   const handleEdit = () => {
-    setSelectedColourId(colourElement?.colorId);
+    setSelectedColourId((prev) => colourElement?.colorId);
     setEditColourModalOpen(true);
   };
 
-  const handleDelete = () => {};
+  const handleDelete = () => {
+    setSelectedColourId(colourElement?.colorId);
+    setDeleteColourModalOpen(true);
+  };
 
   return (
     <tr>
@@ -50,7 +54,9 @@ function ColourListElement({
       </td>
       <td>
         <div className="d-flex justify-content-center">
-          <Button variant="danger">Remove Colour</Button>
+          <Button onClick={handleDelete} variant="danger">
+            Remove Colour
+          </Button>
         </div>
       </td>
     </tr>
