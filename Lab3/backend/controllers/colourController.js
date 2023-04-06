@@ -204,7 +204,7 @@ router.delete("/:id", (req, res) => {
   if (selectedColourIndex === -1) {
     //Not Found
     console.log(`Colour with id ${id} not found`);
-    res.status(404).send("Colour could not be found");
+    res.status(404).send({ error: "Colour could not be found" });
     return;
   }
 
