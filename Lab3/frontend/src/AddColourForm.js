@@ -1,57 +1,69 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import Form from "react-bootstrap/Form";
+import { SliderPicker } from "react-color";
 
 function TeacherCreateModuleForm(props) {
-  const [colourName, setColourName] = useState("");
-  const [hexValue, setHexValue] = useState("#");
+  const hexValueRef = useRef(null);
+  const { colourName, setColourName } = props?.colourName;
+  const { hexValue, setHexValue } = props?.hexValue;
+  const { errorMessage, setErrorMessage } = props?.errorMessage;
+
   const hexValueRegex = /^#([0-9A-F]{6})$/i; //Start = #, 6 values 0-F in Hex / 3 Hex numbers
   const colourNameRegex = /^[\w\s-]+$/; //Word characters only
 
   useEffect(() => {
-    if (colourName.length < 1) {
-      setErrorMessage({
-        ...errorMessage,
-        colourName: "Colour Name must be at least 1 character",
-      });
-      return;
-    }
-    if (colourName.length >= 25) {
-      setErrorMessage({
-        ...errorMessage,
-        colourName: "Colour Name must be 25 characters or less",
-      });
-      return;
-    }
-    if (!colourNameRegex.test(colourName)) {
-      setErrorMessage({
-        ...errorMessage,
-        colourName:
-          "Colour Name must not contain any special characters apart from - or _",
-      });
+    //Focus the input
+    hexValueRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    if (colourName.length < 3) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        colourName: "Colour Name must be at least 3 characters",
+      }));
       return;
     }
 
-    setErrorMessage((errorMessage) => ({ ...errorMessage, colourName: null }));
+    if (colourName.length >= 25) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        colourName: "Colour Name must be 25 characters or less",
+      }));
+      return;
+    }
+    if (!colourNameRegex.test(colourName)) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        colourName:
+          "Colour Name must not contain any special characters apart from - or _",
+      }));
+      return;
+    }
+
+    setErrorMessage((prev) => ({ ...prev, colourName: null }));
   }, [colourName]);
 
   useEffect(() => {
     if (hexValue.length < 7 || hexValue.length > 7) {
-      setErrorMessage({
-        ...errorMessage,
-        hexValue: "Hex Value must be 6 characters following the # character",
-      });
+      setErrorMessage((prev) => ({
+        ...prev,
+        hexValue:
+          "Hex Value must be 6 hex characters following the # character",
+      }));
       return;
     }
 
     if (!hexValueRegex.test(hexValue)) {
-      setErrorMessage({
-        ...errorMessage,
-        hexValue: "Hex value must be in the format #123ABC",
-      });
+      setErrorMessage((prev) => ({
+        ...prev,
+        hexValue:
+          "Hex value must be in the format #123ABC, using hex characters only",
+      }));
       return;
     }
 
-    setErrorMessage((errorMessage) => ({ ...errorMessage, hexValue: null }));
+    setErrorMessage((prev) => ({ ...prev, hexValue: null }));
   }, [hexValue]);
 
   return (
@@ -59,9 +71,11 @@ function TeacherCreateModuleForm(props) {
       <Form.Group>
         <Form.Label htmlFor="colourName">Colour Name:</Form.Label>
         <Form.Control
+          ref={hexValueRef}
           type="text"
           id="colourName"
           autoComplete="off"
+          isInvalid={errorMessage?.colourName}
           onChange={(event) => setColourName(event.target.value)} //update state on change
           value={colourName} //value = state value
           required
@@ -70,7 +84,6 @@ function TeacherCreateModuleForm(props) {
           {errorMessage.colourName}
         </Form.Control.Feedback>
       </Form.Group>
-
       <Form.Group>
         <Form.Label htmlFor="hexValue">Hex Value of Colour:</Form.Label>
         <Form.Control
@@ -78,6 +91,7 @@ function TeacherCreateModuleForm(props) {
           id="hexValue"
           autoComplete="off"
           placeholder="#123ABC"
+          isInvalid={errorMessage?.hexValue}
           onChange={(event) => setHexValue(event.target.value)} //update state on change
           value={hexValue} //value = state value
           required
@@ -87,9 +101,26 @@ function TeacherCreateModuleForm(props) {
         </Form.Control.Feedback>
       </Form.Group>
 
-      <Form.Text className="text-muted">
-        {errorMessage.requestError || null}
-      </Form.Text>
+      <Form.Group className="my-3">
+        <SliderPicker
+          color={hexValue}
+          onChange={(color) => {
+            setHexValue(color.hex);
+          }}
+        />
+      </Form.Group>
+
+      <Form.Group>
+        <span>Selected Colour:</span>
+        <div
+          className="w-100 text-center"
+          style={{
+            backgroundColor: `${hexValue}`,
+            height: 50,
+            border: "2px solid white",
+          }}
+        ></div>
+      </Form.Group>
     </Form>
   );
 }

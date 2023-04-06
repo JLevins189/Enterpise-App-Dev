@@ -6,15 +6,18 @@ import ColourListHeader from "./ColourListHeader";
 import ColourDataList from "./ColourDataList";
 import LoadingSpinner from "./LoadingSpinner";
 import FetchError from "./FetchError";
+import AddColourModal from "./AddColourModal";
 
 function App() {
   const [fetchColoursRequestComplete, setFetchColoursRequestComplete] =
     useState(false);
-  const [fetchErrorOccured, setFetchErrorOccured] = useState(false);
+  const [fetchErrorOccurred, setFetchErrorOccurred] = useState(false);
+
   const [addColourModalOpen, setAddColourModalOpen] = useState(true);
   const [editColourModalOpen, setEditColourModalOpen] = useState(false);
   const [deleteColourModalOpen, setDeleteColourModalOpen] = useState(true);
-  const [selectedColour, setSelectedColour] = useState(-1); //for edit/delete button
+
+  const [selectedColourId, setSelectedColourId] = useState(-1); //for edit/delete button
   const [colourData, setColourData] = useState([]);
 
   useEffect(() => {
@@ -25,7 +28,7 @@ function App() {
         setColourData(response?.data);
       } catch (err) {
         console.log(err);
-        setFetchErrorOccured(true);
+        setFetchErrorOccurred(true);
       } finally {
         setFetchColoursRequestComplete(true);
       }
@@ -39,12 +42,17 @@ function App() {
       <Container fluid className="mt-4" style={{ maxWidth: "1920px" }}>
         {!fetchColoursRequestComplete ? (
           <LoadingSpinner />
-        ) : fetchErrorOccured ? (
+        ) : fetchErrorOccurred ? (
           <FetchError />
         ) : (
           <>
             <ColourListHeader setAddColourModalOpen={setAddColourModalOpen} />
             <ColourDataList colourData={colourData} />
+            <AddColourModal
+              modalOpen={addColourModalOpen}
+              setModalOpen={setAddColourModalOpen}
+              setColourData={setColourData}
+            />
           </>
         )}
       </Container>
