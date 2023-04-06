@@ -1,6 +1,6 @@
 import { useState } from "react";
 import CustomModal from "./CustomModal";
-import AddColourForm from "./AddColourForm";
+import AddEditColourForm from "./AddEditColourForm";
 import axiosInstance from "util/AxiosInstance";
 import Alert from "react-bootstrap/Alert";
 
@@ -56,7 +56,7 @@ function AddColourModal({ modalOpen, setModalOpen, setColourData }) {
       modalTitle={"Title"}
       modalBody={
         <>
-          <AddColourForm
+          <AddEditColourForm
             colourName={{ colourName, setColourName }}
             hexValue={{ hexValue, setHexValue }}
             errorMessage={{ errorMessage, setErrorMessage }}

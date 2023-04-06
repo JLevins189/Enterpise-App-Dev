@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import Form from "react-bootstrap/Form";
 import { SliderPicker } from "react-color";
 
-function TeacherCreateModuleForm(props) {
+function AddEditColourForm(props) {
   const hexValueRef = useRef(null);
   const { colourName, setColourName } = props?.colourName;
   const { hexValue, setHexValue } = props?.hexValue;
@@ -124,4 +124,5 @@ function TeacherCreateModuleForm(props) {
     </Form>
   );
 }
-export default TeacherCreateModuleForm;
+export default AddEditColourForm;
+// https://medium.com/how-to-react/how-to-use-the-color-picker-in-reactjs-42a77087d93d
