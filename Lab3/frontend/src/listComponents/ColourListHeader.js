@@ -8,7 +8,7 @@ function ColourListHeader({ setAddColourModalOpen }) {
     <Container fluid className="p-0 m-0 mb-4">
       <Row className="mt-4">
         <Col>
-          <h1>Colour List</h1>
+          <h1 className="table-cell">Colour List</h1>
         </Col>
       </Row>
       <Row className="mt-4">

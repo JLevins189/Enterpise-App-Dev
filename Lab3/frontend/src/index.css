@@ -1,13 +1,29 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@supports (mix-blend-mode: difference) {
+  .table-cell:not(.no-contrast) {
+    mix-blend-mode: difference;
+    color: white;
+    background-color: black;
+  }
+
 }
+.table td:not(.no-contrast),
+.table th {
+  background-color: transparent !important;
+}
+/* Fallback style for browsers that do not support mix-blend-mode */
+@supports not (mix-blend-mode: difference) {
+  .table-cell {
+    color: black;
+    background-color: white;
+  }
+}
+

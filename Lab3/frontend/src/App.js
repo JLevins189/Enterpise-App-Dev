@@ -20,6 +20,7 @@ function App() {
   const [deleteColourModalOpen, setDeleteColourModalOpen] = useState(false);
 
   const [selectedColourId, setSelectedColourId] = useState(-1); //for edit/delete button
+  const [backgroundColor, setBackgroundColor] = useState("white"); //match spelling
   const [colourData, setColourData] = useState([]);
 
   useEffect(() => {
@@ -40,7 +41,14 @@ function App() {
   return (
     <>
       <Navbar />
-      <Container fluid className="mt-4" style={{ maxWidth: "1920px" }}>
+      <Container
+        fluid
+        className="mt-4"
+        style={{
+          maxWidth: "1920px",
+          backgroundColor,
+        }}
+      >
         {!fetchColoursRequestComplete ? (
           <LoadingSpinner />
         ) : fetchErrorOccurred ? (
@@ -53,6 +61,7 @@ function App() {
               setEditColourModalOpen={setEditColourModalOpen}
               setDeleteColourModalOpen={setDeleteColourModalOpen}
               setSelectedColourId={setSelectedColourId}
+              setBackgroundColor={setBackgroundColor}
             />
             <AddColourModal
               modalOpen={addColourModalOpen}

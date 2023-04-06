@@ -5,6 +5,7 @@ function ColourListElement({
   setEditColourModalOpen,
   setDeleteColourModalOpen,
   setSelectedColourId,
+  setBackgroundColor,
 }) {
   // <th>ID</th>
   // <th>Colour</th>
@@ -14,6 +15,7 @@ function ColourListElement({
   // <th>HSL</th>
   // <th>Edit</th>
   // <th>Remove</th>
+  // <th>Set As Background</th>
   const convertRgbDataToColumn = (input) => {
     return `rgb(${input?.r},${input?.g},${input?.b})`;
   };
@@ -31,10 +33,15 @@ function ColourListElement({
     setDeleteColourModalOpen(true);
   };
 
+  const handleSetAsBackground = () => {
+    setBackgroundColor(colourElement?.hexString);
+  };
+
   return (
     <tr>
-      <td>{colourElement?.colorId}</td>
+      <td className="table-cell">{colourElement?.colorId}</td>
       <td
+        className="no-contrast"
         style={{
           backgroundColor: colourElement?.hexString,
           height: "100%",
@@ -43,21 +50,26 @@ function ColourListElement({
           maxWidth: "250px",
         }}
       ></td>
-      <td>{colourElement?.name}</td>
-      <td>{colourElement?.hexString}</td>
-      <td>{convertRgbDataToColumn(colourElement?.rgb)}</td>
-      <td>{convertHslDataToColumn(colourElement?.hsl)}</td>
-      <td>
-        <div className="d-flex justify-content-center">
-          <Button onClick={handleEdit}>Edit Colour</Button>
-        </div>
+      <td className="table-cell">{colourElement?.name}</td>
+      <td className="table-cell">{colourElement?.hexString}</td>
+      <td className="table-cell">
+        {convertRgbDataToColumn(colourElement?.rgb)}
+      </td>
+      <td className="table-cell">
+        {convertHslDataToColumn(colourElement?.hsl)}
       </td>
       <td>
-        <div className="d-flex justify-content-center">
-          <Button onClick={handleDelete} variant="danger">
-            Remove Colour
-          </Button>
-        </div>
+        <Button onClick={handleEdit}>Edit Colour</Button>
+      </td>
+      <td>
+        <Button onClick={handleDelete} variant="danger">
+          Remove Colour
+        </Button>
+      </td>
+      <td>
+        <Button onClick={handleSetAsBackground} variant="warning">
+          Set As Background
+        </Button>
       </td>
     </tr>
   );
