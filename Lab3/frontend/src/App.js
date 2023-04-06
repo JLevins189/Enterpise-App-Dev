@@ -20,7 +20,9 @@ function App() {
   const [deleteColourModalOpen, setDeleteColourModalOpen] = useState(false);
 
   const [selectedColourId, setSelectedColourId] = useState(-1); //for edit/delete button
-  const [backgroundColor, setBackgroundColor] = useState("white"); //match spelling
+  const [backgroundColor, setBackgroundColor] = useState(
+    JSON.parse(document.cookie)?.backgroundColor
+  );
   const [colourData, setColourData] = useState([]);
 
   useEffect(() => {
@@ -83,6 +85,7 @@ function App() {
                 setModalOpen={setDeleteColourModalOpen}
                 colourData={colourData}
                 setColourData={setColourData}
+                selectedColourId={selectedColourId}
               />
             )}
           </>

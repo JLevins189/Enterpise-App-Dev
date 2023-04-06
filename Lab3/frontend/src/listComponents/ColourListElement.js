@@ -29,12 +29,15 @@ function ColourListElement({
   };
 
   const handleDelete = () => {
-    setSelectedColourId(colourElement?.colorId);
+    setSelectedColourId((prev) => colourElement?.colorId);
     setDeleteColourModalOpen(true);
   };
 
   const handleSetAsBackground = () => {
     setBackgroundColor(colourElement?.hexString);
+    document.cookie = JSON.stringify({
+      backgroundColor: colourElement?.hexString,
+    });
   };
 
   return (
