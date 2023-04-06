@@ -17,7 +17,7 @@ function AddEditColourForm(props) {
   }, []);
 
   useEffect(() => {
-    if (colourName.length < 3) {
+    if (colourName?.length < 3) {
       setErrorMessage((prev) => ({
         ...prev,
         colourName: "Colour Name must be at least 3 characters",
@@ -25,7 +25,7 @@ function AddEditColourForm(props) {
       return;
     }
 
-    if (colourName.length >= 25) {
+    if (colourName?.length >= 25) {
       setErrorMessage((prev) => ({
         ...prev,
         colourName: "Colour Name must be 25 characters or less",
@@ -45,7 +45,7 @@ function AddEditColourForm(props) {
   }, [colourName]);
 
   useEffect(() => {
-    if (hexValue.length < 7 || hexValue.length > 7) {
+    if (hexValue?.length < 7 || hexValue?.length > 7) {
       setErrorMessage((prev) => ({
         ...prev,
         hexValue:
