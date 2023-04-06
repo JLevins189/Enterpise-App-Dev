@@ -1,10 +1,10 @@
 import { useState } from "react";
 import CustomModal from "./CustomModal";
 import AddColourForm from "./AddColourForm";
-import axiosInstance from "./AxiosInstance";
-import { Alert, Badge } from "react-bootstrap";
+import axiosInstance from "util/AxiosInstance";
+import Alert from "react-bootstrap/Alert";
 
-function AddColourModal({ modalOpen, setModalOpen, setColourData }) {
+function EditColourModal({ modalOpen, setModalOpen, setColourData }) {
   const [successAddingColour, setSuccessAddingColour] = useState(false);
   const [colourName, setColourName] = useState("");
   const [hexValue, setHexValue] = useState("#");
@@ -86,4 +86,4 @@ function AddColourModal({ modalOpen, setModalOpen, setColourData }) {
   );
 }
 
-export default AddColourModal;
+export default EditColourModal;

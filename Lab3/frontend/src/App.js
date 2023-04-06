@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
-import axiosInstance from "./AxiosInstance";
-import Container from "react-bootstrap/Container";
+import axiosInstance from "util/AxiosInstance";
 import Navbar from "./Navbar";
-import ColourListHeader from "./ColourListHeader";
-import ColourDataList from "./ColourDataList";
-import LoadingSpinner from "./LoadingSpinner";
-import FetchError from "./FetchError";
-import AddColourModal from "./AddColourModal";
+import ColourListHeader from "listComponents/ColourListHeader";
+import ColourDataList from "listComponents/ColourDataList";
+import LoadingSpinner from "util/LoadingSpinner";
+import FetchError from "util/FetchError";
+import AddColourModal from "modals/AddColourModal";
+import EditColourModal from "modals/EditColourModal";
+import Container from "react-bootstrap/Container";
 
 function App() {
   const [fetchColoursRequestComplete, setFetchColoursRequestComplete] =
@@ -51,6 +52,11 @@ function App() {
             <AddColourModal
               modalOpen={addColourModalOpen}
               setModalOpen={setAddColourModalOpen}
+              setColourData={setColourData}
+            />
+            <EditColourModal
+              modalOpen={editColourModalOpen}
+              setModalOpen={setEditColourModalOpen}
               setColourData={setColourData}
             />
           </>

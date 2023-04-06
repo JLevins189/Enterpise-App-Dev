@@ -1,4 +1,3 @@
-import Container from "react-bootstrap/Container";
 import BootstrapNavbar from "react-bootstrap/Navbar";
 
 function Navbar() {
