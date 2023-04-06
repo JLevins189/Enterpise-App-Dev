@@ -3,7 +3,7 @@ const path = require("path");
 const router = express.Router();
 
 const fs = require("fs");
-const cacheExpiry = 24 * 60 * 60 * 1000; //24hrs
+const cacheExpiry = 30 * 1000; //30sec - allow updated values to reflect on refresh
 const hexValueRegex = /^#([0-9A-F]{6})$/i; //Start = #, 6 values 0-F in Hex / 3 Hex numbers
 const colourNameRegex = /^[\w\s-]+$/; //Word characters only
 let colours = JSON.parse(
@@ -13,7 +13,6 @@ let colours = JSON.parse(
 const hexToDecimal = (hex) => parseInt(hex, 16);
 const hexStringToRgbValues = (hex) => {
   hex = hex.replace(/^#/, "");
-  console.log(hex);
   // Split the hex string
   const redHex = hex.substring(0, 2);
   const greenHex = hex.substring(2, 4);
@@ -72,9 +71,9 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
   const id = parseInt(req.params.id);
   if (isNaN(id)) {
-    console.error(`Invalid colourId param ${req.params.id}`);
+    console.error(`Invalid colourId param "${req.params.id}"`);
     res.status(400).send({
-      error: `Invalid id ${req.params.id} entered. Please Enter a number`,
+      error: `Invalid id "${req.params.id}" entered. Please Enter a number`,
     });
     return;
   }
@@ -137,7 +136,7 @@ router.put("/:id", (req, res) => {
   if (isNaN(id)) {
     console.error(`Invalid colourId param ${req.params.id}`);
     res.status(400).send({
-      error: `Invalid id ${req.params.id} entered. Please Enter a number`,
+      error: `Invalid id "${req.params.id}" entered. Please Enter a number`,
     });
     return;
   }
@@ -192,9 +191,9 @@ router.put("/:id", (req, res) => {
 router.delete("/:id", (req, res) => {
   const id = parseInt(req.params.id);
   if (isNaN(id)) {
-    console.error(`Invalid colourId param ${req.params.id}`);
+    console.error(`Invalid colourId param "${req.params.id}"`);
     res.status(400).send({
-      error: `Invalid id ${req.params.id} entered. Please Enter a number`,
+      error: `Invalid id "${req.params.id}" entered. Please Enter a number`,
     });
     return;
   }
