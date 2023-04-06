@@ -15,7 +15,7 @@ function EditColourModal({
     (colour) => colour.colorId === selectedColourId
   );
 
-  const [successAddingColour, setSuccessAddingColour] = useState(false);
+  const [successEditingColour, setSuccessEditingColour] = useState(false);
   const [colourName, setColourName] = useState(objectBeingUpdated?.name);
   const [hexValue, setHexValue] = useState(objectBeingUpdated?.hexString);
   const [errorMessage, setErrorMessage] = useState({});
@@ -30,7 +30,7 @@ function EditColourModal({
   const handleEditColourRequest = async () => {
     if (selectedColourId === -1) {
       //Remove success alert
-      setSuccessAddingColour((prev) => false);
+      setSuccessEditingColour((prev) => false);
 
       //Show error alert
       setErrorMessage((prev) => ({
@@ -63,7 +63,7 @@ function EditColourModal({
       }
 
       //Add success alert
-      setSuccessAddingColour((prev) => true);
+      setSuccessEditingColour((prev) => true);
       //Clear error
       setErrorMessage((prev) => ({
         ...prev,
@@ -72,7 +72,7 @@ function EditColourModal({
     } catch (err) {
       console.log(err);
       //Remove success alert
-      setSuccessAddingColour((prev) => false);
+      setSuccessEditingColour((prev) => false);
 
       //Show error alert
       setErrorMessage((prev) => ({
@@ -104,7 +104,7 @@ function EditColourModal({
           ) : null}
 
           {/* success alert */}
-          {successAddingColour ? (
+          {successEditingColour ? (
             <Alert variant="success" className="mt-3">
               Colour edited successfully
             </Alert>
