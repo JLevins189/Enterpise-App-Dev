@@ -14,6 +14,7 @@ function EditColourModal({
   const objectBeingUpdated = colourData?.find(
     (colour) => colour.colorId === selectedColourId
   );
+
   const [successAddingColour, setSuccessAddingColour] = useState(false);
   const [colourName, setColourName] = useState(objectBeingUpdated?.name);
   const [hexValue, setHexValue] = useState(objectBeingUpdated?.hexString);
@@ -43,7 +44,7 @@ function EditColourModal({
         hexString: hexValue,
         name: colourName,
       });
-      console.log(response);
+
       //success (created new)
       if (response?.status === 200) {
         //Edit in current list
