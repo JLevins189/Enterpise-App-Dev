@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axiosInstance from "util/AxiosInstance";
 import Navbar from "./Navbar";
 import ColourListHeader from "listComponents/ColourListHeader";
@@ -11,6 +11,17 @@ import DeleteColourModal from "modals/DeleteColourModal";
 import Container from "react-bootstrap/Container";
 
 function App() {
+  const cookies = useMemo(() => {
+    const cookiesArr = document.cookie.split("; ");
+
+    const cookieJson = {};
+    cookiesArr.forEach((cookie) => {
+      const [cookieName, cookieValue] = cookie.split("=");
+      cookieJson[cookieName.trim()] = cookieValue.trim();
+    });
+    return cookieJson;
+  }, []);
+
   const [fetchColoursRequestComplete, setFetchColoursRequestComplete] =
     useState(false);
   const [fetchErrorOccurred, setFetchErrorOccurred] = useState(false);
@@ -21,7 +32,7 @@ function App() {
 
   const [selectedColourId, setSelectedColourId] = useState(-1); //for edit/delete button
   const [backgroundColor, setBackgroundColor] = useState(
-    JSON.parse(document.cookie)?.backgroundColor
+    cookies?.backgroundColour || "purple"
   );
   const [colourData, setColourData] = useState([]);
 

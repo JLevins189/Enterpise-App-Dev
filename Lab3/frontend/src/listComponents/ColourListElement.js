@@ -35,9 +35,11 @@ function ColourListElement({
 
   const handleSetAsBackground = () => {
     setBackgroundColor(colourElement?.hexString);
-    document.cookie = JSON.stringify({
-      backgroundColor: colourElement?.hexString,
-    });
+    const cookieExpiry = "max-age=" + 60 * 60 * 24 * 7 * 52; // 52 weeks (1yr)
+    document.cookie =
+      `backgroundColour=${colourElement?.hexString};` +
+      cookieExpiry +
+      ";path=/;";
   };
 
   return (
