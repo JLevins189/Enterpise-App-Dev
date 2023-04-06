@@ -1,7 +1,11 @@
 import ColourListElement from "./ColourListElement";
 import Table from "react-bootstrap/Table";
 
-function ColourDataList({ colourData }) {
+function ColourDataList({
+  colourData,
+  setEditColourModalOpen,
+  setSelectedColourId,
+}) {
   return (
     <Table responsive striped bordered hover>
       <thead>
@@ -21,6 +25,8 @@ function ColourDataList({ colourData }) {
           <ColourListElement
             colourElement={colourElement}
             key={colourElement?.colorId}
+            setEditColourModalOpen={setEditColourModalOpen}
+            setSelectedColourId={setSelectedColourId}
           />
         ))}
       </tbody>

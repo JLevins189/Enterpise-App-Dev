@@ -14,7 +14,7 @@ function App() {
     useState(false);
   const [fetchErrorOccurred, setFetchErrorOccurred] = useState(false);
 
-  const [addColourModalOpen, setAddColourModalOpen] = useState(true);
+  const [addColourModalOpen, setAddColourModalOpen] = useState(false);
   const [editColourModalOpen, setEditColourModalOpen] = useState(false);
   const [deleteColourModalOpen, setDeleteColourModalOpen] = useState(true);
 
@@ -48,17 +48,25 @@ function App() {
         ) : (
           <>
             <ColourListHeader setAddColourModalOpen={setAddColourModalOpen} />
-            <ColourDataList colourData={colourData} />
+            <ColourDataList
+              colourData={colourData}
+              setEditColourModalOpen={setEditColourModalOpen}
+              setSelectedColourId={setSelectedColourId}
+            />
             <AddColourModal
               modalOpen={addColourModalOpen}
               setModalOpen={setAddColourModalOpen}
               setColourData={setColourData}
             />
-            <EditColourModal
-              modalOpen={editColourModalOpen}
-              setModalOpen={setEditColourModalOpen}
-              setColourData={setColourData}
-            />
+            {editColourModalOpen && (
+              <EditColourModal
+                modalOpen={editColourModalOpen}
+                setModalOpen={setEditColourModalOpen}
+                colourData={colourData}
+                setColourData={setColourData}
+                selectedColourId={selectedColourId}
+              />
+            )}
           </>
         )}
       </Container>

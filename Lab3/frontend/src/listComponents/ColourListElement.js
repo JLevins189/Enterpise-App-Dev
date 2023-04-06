@@ -1,6 +1,10 @@
 import Button from "react-bootstrap/Button";
 
-function ColourListElement({ colourElement }) {
+function ColourListElement({
+  colourElement,
+  setEditColourModalOpen,
+  setSelectedColourId,
+}) {
   // <th>ID</th>
   // <th>Colour</th>
   // <th>Name</th>
@@ -9,7 +13,6 @@ function ColourListElement({ colourElement }) {
   // <th>HSL</th>
   // <th>Edit</th>
   // <th>Remove</th>
-
   const convertRgbDataToColumn = (input) => {
     return `rgb(${input?.r},${input?.g},${input?.b})`;
   };
@@ -17,7 +20,12 @@ function ColourListElement({ colourElement }) {
     return `hsl(${input?.h},${input?.s}%,${input?.l}%)`;
   };
 
-  const handleEditDelete = () => {};
+  const handleEdit = () => {
+    setSelectedColourId(colourElement?.colorId);
+    setEditColourModalOpen(true);
+  };
+
+  const handleDelete = () => {};
 
   return (
     <tr>
@@ -37,7 +45,7 @@ function ColourListElement({ colourElement }) {
       <td>{convertHslDataToColumn(colourElement?.hsl)}</td>
       <td>
         <div className="d-flex justify-content-center">
-          <Button>Edit Colour</Button>
+          <Button onClick={handleEdit}>Edit Colour</Button>
         </div>
       </td>
       <td>
