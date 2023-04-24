@@ -9,6 +9,7 @@ import AddColourModal from "modals/AddColourModal";
 import EditColourModal from "modals/EditColourModal";
 import DeleteColourModal from "modals/DeleteColourModal";
 import Container from "react-bootstrap/Container";
+import Explaination from "util/Explaination";
 
 function App() {
   const cookies = useMemo(() => {
@@ -64,7 +65,7 @@ function App() {
     const rowRef = document.getElementById(`index-${lastUsedIndex}`);
 
     if (rowRef) {
-      rowRef.scrollIntoView();
+      rowRef.scrollIntoView({ block: "center" });
     }
   }, [fetchColoursRequestComplete]);
 
@@ -79,6 +80,7 @@ function App() {
           backgroundColor,
         }}
       >
+        <Explaination />
         {!fetchColoursRequestComplete ? (
           <LoadingSpinner />
         ) : fetchErrorOccurred ? (
