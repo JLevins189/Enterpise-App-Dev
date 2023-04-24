@@ -7,12 +7,15 @@ function ColourDataList({
   setDeleteColourModalOpen,
   setSelectedColourId,
   setBackgroundColor,
+  rememberedRowIndex,
+  setRememberedRowIndex,
 }) {
   return (
     <div className="table-responsive">
       <Table responsive bordered>
         <thead>
           <tr>
+            <th className="table-cell">Selected</th>
             <th className="table-cell">ID</th>
             <th className="table-cell">Colour</th>
             <th className="table-cell">Name</th>
@@ -33,6 +36,8 @@ function ColourDataList({
               setDeleteColourModalOpen={setDeleteColourModalOpen}
               setSelectedColourId={setSelectedColourId}
               setBackgroundColor={setBackgroundColor}
+              rememberedRowIndex={rememberedRowIndex}
+              setRememberedRowIndex={setRememberedRowIndex}
             />
           ))}
         </tbody>

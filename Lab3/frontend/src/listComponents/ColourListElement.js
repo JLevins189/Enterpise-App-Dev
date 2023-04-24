@@ -1,3 +1,4 @@
+import { Col } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 
 function ColourListElement({
@@ -6,6 +7,8 @@ function ColourListElement({
   setDeleteColourModalOpen,
   setSelectedColourId,
   setBackgroundColor,
+  rememberedRowIndex,
+  setRememberedRowIndex,
 }) {
   // <th>ID</th>
   // <th>Colour</th>
@@ -24,16 +27,19 @@ function ColourListElement({
   };
 
   const handleEdit = () => {
+    rememberColourIndexCookie();
     setSelectedColourId((prev) => colourElement?.colorId);
     setEditColourModalOpen(true);
   };
 
   const handleDelete = () => {
+    rememberColourIndexCookie();
     setSelectedColourId((prev) => colourElement?.colorId);
     setDeleteColourModalOpen(true);
   };
 
   const handleSetAsBackground = () => {
+    rememberColourIndexCookie();
     setBackgroundColor(colourElement?.hexString);
     const cookieExpiry = "max-age=" + 60 * 60 * 24 * 7 * 52; // 52 weeks (1yr)
     document.cookie =
@@ -42,9 +48,37 @@ function ColourListElement({
       ";path=/;";
   };
 
+  //Call this for all buttons and scroll to this colour on refresh
+  const rememberColourIndexCookie = () => {
+    setRememberedRowIndex(colourElement?.colorId);
+    const cookieExpiry = "max-age=" + 60 * 60 * 24 * 7 * 52; // 52 weeks (1yr)
+    document.cookie =
+      `rememberedRowIndex=${colourElement?.colorId};` +
+      cookieExpiry +
+      ";path=/;";
+  };
+
   return (
-    <tr>
+    <tr
+      id={`index-${colourElement?.colorId}`}
+      className={
+        rememberedRowIndex === colourElement?.colorId ? "selectedRow" : null
+      }
+    >
+      <td className="table-cell no-contrast">
+        {rememberedRowIndex === colourElement?.colorId ? (
+          <Col
+            xs={12}
+            className="selected-indicator"
+            style={{ backgroundColor: "white", height: 50 }}
+          >
+            <i className="bi bi-check2-square"></i>
+          </Col>
+        ) : null}
+      </td>
+
       <td className="table-cell">{colourElement?.colorId}</td>
+
       <td
         className="no-contrast"
         style={{
