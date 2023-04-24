@@ -10,6 +10,7 @@ function ColourListElement({
   rememberedRowIndex,
   setRememberedRowIndex,
 }) {
+  // <th>Selected</th>
   // <th>ID</th>
   // <th>Colour</th>
   // <th>Name</th>
@@ -67,13 +68,14 @@ function ColourListElement({
     >
       <td className="table-cell no-contrast">
         {rememberedRowIndex === colourElement?.colorId ? (
-          <Col
-            xs={12}
-            className="selected-indicator"
-            style={{ backgroundColor: "white", height: 50 }}
+          <div
+            class="d-flex justify-content-center align-items-center bg-white"
+            style={{ height: "100%" }}
           >
-            <i className="bi bi-check2-square"></i>
-          </Col>
+            <h4>
+              <i class="bi bi-check2-square"></i>
+            </h4>
+          </div>
         ) : null}
       </td>
 
