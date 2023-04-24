@@ -12,12 +12,12 @@ import Container from "react-bootstrap/Container";
 
 function App() {
   const cookies = useMemo(() => {
-    const cookiesArr = document.cookie.split("; ");
+    const cookiesArr = document?.cookie?.split("; ");
 
     const cookieJson = {};
-    cookiesArr.forEach((cookie) => {
-      const [cookieName, cookieValue] = cookie.split("=");
-      cookieJson[cookieName.trim()] = cookieValue.trim();
+    cookiesArr?.forEach((cookie) => {
+      const [cookieName, cookieValue] = cookie?.split("=");
+      cookieJson[cookieName?.trim()] = cookieValue?.trim();
     });
     return cookieJson;
   }, []);
@@ -31,8 +31,9 @@ function App() {
   const [deleteColourModalOpen, setDeleteColourModalOpen] = useState(false);
 
   const [selectedColourId, setSelectedColourId] = useState(-1); //for edit/delete button
+  const [rememberedRowIndex, setRememberedRowIndex] = useState(-1); //for cookie functionality
   const [backgroundColor, setBackgroundColor] = useState(
-    cookies?.backgroundColour || "purple"
+    cookies?.backgroundColour
   );
   const [colourData, setColourData] = useState([]);
 
@@ -50,6 +51,22 @@ function App() {
     };
     getColourData();
   }, []);
+
+  useEffect(() => {
+    console.log(cookies);
+    const lastUsedIndex = cookies?.rememberedRowIndex;
+
+    if (!lastUsedIndex) {
+      return;
+    }
+
+    setRememberedRowIndex(parseInt(lastUsedIndex));
+    const rowRef = document.getElementById(`index-${lastUsedIndex}`);
+
+    if (rowRef) {
+      rowRef.scrollIntoView();
+    }
+  }, [fetchColoursRequestComplete]);
 
   return (
     <>
@@ -75,6 +92,8 @@ function App() {
               setDeleteColourModalOpen={setDeleteColourModalOpen}
               setSelectedColourId={setSelectedColourId}
               setBackgroundColor={setBackgroundColor}
+              rememberedRowIndex={rememberedRowIndex}
+              setRememberedRowIndex={setRememberedRowIndex}
             />
             <AddColourModal
               modalOpen={addColourModalOpen}
