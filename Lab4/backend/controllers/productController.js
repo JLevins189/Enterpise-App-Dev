@@ -1,8 +1,9 @@
 const express = require("express");
 const path = require("path");
 const router = express.Router();
-
 const fs = require("fs");
+const Product = require("../models/productSchema");
+
 const cacheExpiry = 30 * 1000; //30sec - allow updated values to reflect on refresh
 const hexValueRegex = /^#([0-9A-F]{6})$/i; //Start = #, 6 values 0-F in Hex / 3 Hex numbers
 const colourNameRegex = /^[\w\s-]+$/; //Word characters only
@@ -63,29 +64,54 @@ const rgbToHsl = (red, green, blue) => {
 };
 
 router.get("/", (req, res) => {
-  res.setHeader("Cache-Control", "public, max-age=3600");
-  res.setHeader("Expires", new Date(Date.now() + cacheExpiry).toUTCString());
-  res.send(colours);
+  Product.find()
+    .then((products) => {
+      res.setHeader("Cache-Control", `public, max-age=${cacheExpiry}`);
+      res.setHeader(
+        "Expires",
+        new Date(Date.now() + cacheExpiry).toUTCString()
+      );
+      res.send(products);
+    })
+    .catch((error) => {
+      res.status(404).send({ error: "Products not found " });
+      console.error("Error fetching products:", error);
+    });
 });
 
 router.get("/:id", (req, res) => {
   const id = parseInt(req.params.id);
   if (isNaN(id)) {
-    console.error(`Invalid colourId param "${req.params.id}"`);
+    console.error(`Invalid productId param "${req.params.id}"`);
     res.status(400).send({
       error: `Invalid id "${req.params.id}" entered. Please Enter a number`,
     });
     return;
   }
   //LOG REQ
-  console.log(`GET request received for colour with id ${id}`);
-  const selectedColour = colours.find((obj) => obj.colorId === id);
+  console.log(`GET request received for product with id ${id}`);
 
-  res.setHeader("Cache-Control", "public, max-age=3600");
-  res.setHeader("Expires", new Date(Date.now() + cacheExpiry).toUTCString());
-  selectedColour
-    ? res.send(selectedColour)
-    : res.status(404).send({ error: "Colour not found" });
+  Product.findOne({ id })
+    .then((product) => {
+      if (product) {
+        res.setHeader("Cache-Control", `public, max-age=${cacheExpiry}`);
+        res.setHeader(
+          "Expires",
+          new Date(Date.now() + cacheExpiry).toUTCString()
+        );
+
+        res.send(product);
+      } else {
+        res.status(404).send({ error: `Product not found with id ${id}` });
+        console.warn(`Product not found with id ${id}`);
+      }
+    })
+    .catch((error) => {
+      res
+        .status(500)
+        .send({ error: "An error occurred while finding the product" });
+      console.error(`Error finding product with id: ${id}`, error);
+    });
 });
 
 router.post("/", (req, res) => {
