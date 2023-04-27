@@ -1,6 +1,6 @@
 const express = require("express");
-const colourController = require("./controllers/colourController");
+const productController = require("./controllers/productController");
 const router = express.Router();
 
-router.use("/colours", colourController);
+router.use("/products", productController);
 module.exports = router;
