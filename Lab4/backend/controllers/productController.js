@@ -5,63 +5,7 @@ const fs = require("fs");
 const Product = require("../models/productSchema");
 
 const cacheExpiry = 30 * 1000; //30sec - allow updated values to reflect on refresh
-const hexValueRegex = /^#([0-9A-F]{6})$/i; //Start = #, 6 values 0-F in Hex / 3 Hex numbers
-const colourNameRegex = /^[\w\s-]+$/; //Word characters only
-let colours = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "..", "public", "data.json"))
-);
-
-const hexToDecimal = (hex) => parseInt(hex, 16);
-const hexStringToRgbValues = (hex) => {
-  hex = hex.replace(/^#/, "");
-  // Split the hex string
-  const redHex = hex.substring(0, 2);
-  const greenHex = hex.substring(2, 4);
-  const blueHex = hex.substring(4, 6);
-
-  return [hexToDecimal(redHex), hexToDecimal(greenHex), hexToDecimal(blueHex)];
-};
-const rgbToHsl = (red, green, blue) => {
-  // r,g,b as decimal val/1
-  red /= 255;
-  green /= 255;
-  blue /= 255;
-
-  const cmax = Math.max(red, green, blue);
-  const cmin = Math.min(red, green, blue);
-
-  const delta = cmax - cmin; //cdiff
-
-  // Calculate hue
-  let hue = 0;
-  if (delta === 0) {
-    hue = 0;
-  } else if (cmax === red) {
-    hue = ((green - blue) / delta) % 6;
-  } else if (cmax === green) {
-    hue = (blue - red) / delta + 2;
-  } else {
-    hue = (red - green) / delta + 4;
-  }
-
-  hue = Math.round(hue * 60);
-  if (hue < 0) {
-    hue += 360;
-  }
-
-  //Calculate lightness
-  const lightness = (cmax + cmin) / 2;
-
-  // Calculate saturation
-  const saturation =
-    delta === 0 ? 0 : delta / (1 - Math.abs(2 * lightness - 1));
-
-  return {
-    h: Math.round(hue),
-    s: Math.round(saturation * 100),
-    l: Math.round(lightness * 100),
-  };
-};
+const productTitleRegex = /^[\w\s-]+$/; //Word characters only
 
 router.get("/", (req, res) => {
   Product.find()
@@ -115,43 +59,89 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  const { hexString, name } = req.body; //Take in hex, convert to other formats
-  //Validate inputs
-  if (!hexValueRegex.test(hexString)) {
-    res.status(400).send({
-      error: `${hexString} is not a valid hex colour string`,
-      field: "hexString",
-    });
-    return;
-  }
-  if (!colourNameRegex.test(name)) {
-    res.status(400).send({
-      error: `${name} is not a valid colour name. Do not use special characters`,
-      field: "name",
-    });
-    return;
-  }
+  //TODO generate these fields
+  //ID
+  //Images
+  //Thumbnail
 
-  //Convert from hex
-  console.log("Request Received for new colour");
-  const [r, g, b] = hexStringToRgbValues(hexString);
-  const hsl = rgbToHsl(r, g, b);
-  const newColour = {
-    colorId: colours.length,
-    hexString,
-    rgb: { r, g, b },
-    hsl,
-    name,
-  };
-
-  colours.push(newColour);
-
-  fs.writeFileSync(
-    path.join(__dirname, "..", "public", "data.json"),
-    JSON.stringify(colours, null, 2)
+  const sanitizedTitle = sanitize(req.body.productTitle);
+  const sanitizedDescription = sanitize(req.body.productDescription);
+  const sanitizedPrice = sanitize(req.body.productPrice);
+  const sanitizedDiscountPercentage = sanitize(
+    req.body.productDiscountPercentage
   );
+  const sanitizedRating = sanitize(req.body.productRating);
+  const sanitizedStock = sanitize(req.body.productStock);
+  const sanitizedBrand = sanitize(req.body.productBrand);
+  const sanitizedCategory = sanitize(req.body.productCategory);
 
-  res.status(201).send(newColour);
+  /*
+   * Validate inputs
+   */
+  //Validate Title
+  if (sanitizedTitle?.trim().length < 4) {
+    return res.status(400).send({
+      error: "Product Title must be at least 4 letters",
+      field: "productTitle",
+    });
+  }
+  if (sanitizedTitle?.trim().length > 25) {
+    return res.status(400).send({
+      error: "Product Title must be less than 26 letters",
+      field: "productTitle",
+    });
+  }
+  if (!sanitizedTitle.test(productTitleRegex)) {
+    return res.status(400).send({
+      error: "Product Title must only contain standard characters",
+      field: "productTitle",
+    });
+  }
+
+  //Validate Description
+  if (sanitizedDescription?.split().length < 5) {
+    return res.status(400).send({
+      error: "Product Description must contain at least 5 words",
+      field: "productDescription",
+    });
+  }
+  if (sanitizedDescription?.split().length > 200) {
+    return res.status(400).send({
+      error: "Product Description must contain no more than 200 words",
+      field: "productDescription",
+    });
+  }
+
+  //Validate Price
+  if (typeof sanitizedPrice !== "number" || isNaN(sanitizedPrice)) {
+    return res.status(400).send({
+      error: "Product Price must be a number",
+      field: "productPrice",
+    });
+  }
+  if (sanitizedPrice < 0.01) {
+    return res.status(400).send({
+      error: "Product Price must be at least 0.0.1",
+      field: "productPrice",
+    });
+  }
+
+  //Validate Discount
+  if (
+    typeof sanitizedDiscountPercentage !== "number" ||
+    isNaN(sanitizedDiscountPercentage)
+  ) {
+    return res.status(400).send({
+      error: "Product Discount must be a number",
+      field: "productDiscountPercentage",
+    });
+  }
+  if (sanitizedDiscountPercentage < 0) {
+    return res.status(400).send({
+      error: "Product Discount must be at least 0",
+      field: "productDiscountPercentage",
+    });
+  }
 });
 
 router.put("/:id", (req, res) => {
