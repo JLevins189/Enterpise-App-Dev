@@ -315,42 +315,42 @@ router.put("/:id", (req, res) => {
 });
 
 router.delete("/:id", (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.paramInt("id"));
   if (isNaN(id)) {
     console.error(`Invalid colourId param "${req.params.id}"`);
-    res.status(400).send({
+    return res.status(400).send({
       error: `Invalid id "${req.params.id}" entered. Please Enter a number`,
     });
-    return;
   }
 
-  console.log(`DELETE request received for colour with id ${id}`);
+  console.log(`DELETE request received for product with id ${id}`);
 
-  const selectedColourIndex = colours.findIndex((obj) => obj.colorId === id);
-  if (selectedColourIndex === -1) {
-    //Not Found
-    console.log(`Colour with id ${id} not found`);
-    res.status(404).send({ error: "Colour could not be found" });
-    return;
-  }
-
-  colours.splice(selectedColourIndex, 1);
-  fs.writeFileSync(
-    path.join(__dirname, "..", "public", "data.json"),
-    JSON.stringify(colours, null, 2)
-  );
-
-  console.log(`Colour with id ${id} deleted`);
-  res.send("Colour successfully deleted");
+  Product.findOne({ id })
+    .then((product) => {
+      if (product) {
+        product?.deleteOne();
+        console.log(`Colour with id ${id} deleted`);
+        res.send("Colour successfully deleted");
+      } else {
+        res.status(404).send({ error: `Product not found with id ${id}` });
+        return console.warn(`Product not found with id ${id}`);
+      }
+    })
+    .catch((error) => {
+      res
+        .status(500)
+        .send({ error: "An error occurred while finding the product" });
+      return console.error(`Error finding product with id: ${id}`, error);
+    });
 });
 
 router.put("/", (req, res) => {
-  console.error("PUT request received for colour without id");
+  console.error("PUT request received for product without id");
   res.status(400).send({ error: "An id you are working on must be specified" });
 });
 
 router.delete("/", (req, res) => {
-  console.error("DELETE request received for colour without id");
+  console.error("DELETE request received for product without id");
   res.status(400).send({ error: "An id you are working on must be specified" });
 });
 
