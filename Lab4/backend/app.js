@@ -10,7 +10,7 @@ const insertProducts = require("./insertProducts");
 const app = express();
 app.use(require("sanitize").middleware);
 
-const allowedOrigins = ["http://localhost:3000"];
+const allowedOrigins = ["http://localhost:3000", "http://127.0.0.1:3000"];
 const mongoDB = "mongodb://127.0.0.1/products";
 
 mongoose.set("sanitizeFilter", true); //Block NoSQL injection
