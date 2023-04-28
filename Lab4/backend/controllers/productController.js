@@ -354,6 +354,4 @@ router.delete("/", (req, res) => {
   res.status(400).send({ error: "An id you are working on must be specified" });
 });
 
-//https://sabe.io/blog/javascript-hex-to-decimal#:~:text=The%20best%20way%20to%20convert,(base)%20of%20the%20number.
-//https://css-tricks.com/converting-color-spaces-in-javascript/
 module.exports = router;
