@@ -407,27 +407,32 @@ router.put("/:id", (req, res) => {
 
   //Update Record
   Product.findOne({ id })
-    .then((product) => {
+    .then(async (product) => {
       if (product) {
-        const newProduct = new Product({
-          id: product?.id, //shouldn't be changed
-          title: sanitizedTitle,
-          description: sanitizedDescription,
-          price: sanitizedPrice,
-          discountPercentage: sanitizedDiscountPercentage,
-          rating: sanitizedRating,
-          stock: sanitizedStock,
-          brand: product?.brand, //shouldn't need to change
-          category: product?.category, //shouldn't need to change
-          thumbnail: product?.thumbnail,
-          images: product?.images,
-        });
-        product?.replaceOne(newProduct);
-        res.send(newProduct);
+        product.title = sanitizedTitle;
+        product.description = sanitizedDescription;
+        product.price = sanitizedPrice;
+        product.discountPercentage = sanitizedDiscountPercentage;
+        product.rating = sanitizedRating;
+        product.stock = sanitizedStock;
+
+        try {
+          const updatedProduct = await product?.save();
+          return res.send(updatedProduct);
+        } catch (err) {
+          console.error(err);
+          res
+            .status(500)
+            .send({ error: "An error occurred while updating the product" });
+        }
+
+        res.send(product);
         console.log(`Product with id ${id} updated`);
       } else {
-        res.status(404).send({ error: `Product not found with id ${id}` });
-        return console.warn(`Product not found with id ${id}`);
+        console.warn(`Product not found with id ${id}`);
+        return res
+          .status(404)
+          .send({ error: `Product not found with id ${id}` });
       }
     })
     .catch((error) => {
