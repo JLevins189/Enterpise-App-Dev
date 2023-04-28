@@ -11,6 +11,7 @@ import DeleteColourModal from "@modals/DeleteColourModal.jsx";
 // import Explaination from "@util/Explaination.jsx";
 import Container from "react-bootstrap/Container";
 
+//TODO CORS
 function Homepage() {
   const cookies = useMemo(() => {
     const cookiesArr = document?.cookie?.split("; ");
@@ -23,7 +24,7 @@ function Homepage() {
     return cookieJson;
   }, []);
 
-  const [fetchColoursRequestComplete, setFetchColoursRequestComplete] =
+  const [fetchProductsRequestComplete, setFetchProductsRequestComplete] =
     useState(false);
   const [fetchErrorOccurred, setFetchErrorOccurred] = useState(false);
 
@@ -36,21 +37,21 @@ function Homepage() {
   const [backgroundColor, setBackgroundColor] = useState(
     cookies?.backgroundColour
   );
-  const [colourData, setColourData] = useState([]);
+  const [productData, setProductData] = useState([]);
 
   useEffect(() => {
-    const getColourData = async () => {
+    const getAllProductData = async () => {
       try {
-        const response = await axiosInstance.get("/colours");
-        setColourData(response?.data);
+        const response = await axiosInstance.get("/products");
+        setProductData(response?.data);
       } catch (err) {
         console.log(err);
         setFetchErrorOccurred(true);
       } finally {
-        setFetchColoursRequestComplete(true);
+        setFetchProductsRequestComplete(true);
       }
     };
-    getColourData();
+    getAllProductData();
   }, []);
 
   useEffect(() => {
@@ -67,7 +68,7 @@ function Homepage() {
     if (rowRef) {
       rowRef.scrollIntoView({ block: "center" });
     }
-  }, [fetchColoursRequestComplete]);
+  }, [fetchProductsRequestComplete]);
 
   return (
     <>
@@ -81,7 +82,7 @@ function Homepage() {
         }}
       >
         {/* <Explaination /> */}
-        {!fetchColoursRequestComplete ? (
+        {!fetchProductsRequestComplete ? (
           <LoadingSpinner />
         ) : fetchErrorOccurred ? (
           <FetchError />
@@ -89,7 +90,7 @@ function Homepage() {
           <>
             <ColourListHeader setAddColourModalOpen={setAddColourModalOpen} />
             <ColourDataList
-              colourData={colourData}
+              colourData={productData}
               setEditColourModalOpen={setEditColourModalOpen}
               setDeleteColourModalOpen={setDeleteColourModalOpen}
               setSelectedColourId={setSelectedColourId}
@@ -100,14 +101,14 @@ function Homepage() {
             <AddColourModal
               modalOpen={addColourModalOpen}
               setModalOpen={setAddColourModalOpen}
-              setColourData={setColourData}
+              setColourData={setProductData}
             />
             {editColourModalOpen && selectedColourId !== -1 && (
               <EditColourModal
                 modalOpen={editColourModalOpen}
                 setModalOpen={setEditColourModalOpen}
-                colourData={colourData}
-                setColourData={setColourData}
+                colourData={productData}
+                setColourData={setProductData}
                 selectedColourId={selectedColourId}
               />
             )}
@@ -115,8 +116,8 @@ function Homepage() {
               <DeleteColourModal
                 modalOpen={deleteColourModalOpen}
                 setModalOpen={setDeleteColourModalOpen}
-                colourData={colourData}
-                setColourData={setColourData}
+                colourData={productData}
+                setColourData={setProductData}
                 selectedColourId={selectedColourId}
               />
             )}
