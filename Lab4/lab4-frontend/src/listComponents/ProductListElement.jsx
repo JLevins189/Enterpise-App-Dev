@@ -97,7 +97,6 @@ function ProductListElement({
               <p className="text-danger fs-5">Low Stock</p>
             )}
           </Card.Text>
-          {/* <Button variant="primary">Go somewhere</Button> */}
         </Card.Body>
       </Card>
     </Col>
