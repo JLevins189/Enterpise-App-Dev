@@ -8,6 +8,8 @@ const mongoose = require("mongoose");
 const insertProducts = require("./insertProducts");
 
 const app = express();
+app.use(require("sanitize").middleware);
+
 const allowedOrigins = ["http://localhost:3000"];
 const mongoDB = "mongodb://127.0.0.1/products";
 
@@ -29,19 +31,27 @@ connection.once("open", function () {
 
   //Check if DB has been initalised
   if (connection?.db?.collections?.length <= 0) {
-    //Create collection and insert initial data
-
+    // Create collection and insert initial data
     connection
       .createCollection("products")
       .then(() => {
         console.log("Created 'products' collection");
-        insertProducts();
       })
       .catch((error) => {
         console.error("Error creating 'products' collection:", error);
-      }); // connection
+      });
   } else {
     console.log("Database has already been initialised");
   }
+
+  //If no documents add the JSON file data
+  connection
+    ?.collection("products")
+    ?.countDocuments()
+    .then((numberDocs) => {
+      if (numberDocs === 0) {
+        insertProducts();
+      }
+    });
 });
 //https://kb.objectrocket.com/mongo-db/simple-mongoose-and-node-js-example-1007

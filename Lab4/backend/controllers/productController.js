@@ -1,11 +1,19 @@
 const express = require("express");
 const path = require("path");
-const router = express.Router();
 const fs = require("fs");
 const Product = require("../models/productSchema");
+const router = express.Router();
 
 const cacheExpiry = 30 * 1000; //30sec - allow updated values to reflect on refresh
-const productTitleRegex = /^[\w\s-]+$/; //Word characters only
+const wordCharacterRegex = /^[\w\s-]+$/; //Word characters only
+const allowedCategories = [
+  "smartphones",
+  "laptops",
+  "fragrances",
+  "skincare",
+  "groceries",
+  "home-decoration",
+];
 
 router.get("/", (req, res) => {
   Product.find()
@@ -58,40 +66,49 @@ router.get("/:id", (req, res) => {
     });
 });
 
-router.post("/", (req, res) => {
+const getHighestId = async () => {
+  return Product.find().sort({ id: -1 }).limit(1);
+};
+
+router.post("/", async (req, res) => {
   //TODO generate these fields
-  //ID
   //Images
   //Thumbnail
-
-  const sanitizedTitle = sanitize(req.body.productTitle);
-  const sanitizedDescription = sanitize(req.body.productDescription);
-  const sanitizedPrice = sanitize(req.body.productPrice);
-  const sanitizedDiscountPercentage = sanitize(
-    req.body.productDiscountPercentage
+  const highestIdProduct = await getHighestId().catch((err) =>
+    console.error(err)
   );
-  const sanitizedRating = sanitize(req.body.productRating);
-  const sanitizedStock = sanitize(req.body.productStock);
-  const sanitizedBrand = sanitize(req.body.productBrand);
-  const sanitizedCategory = sanitize(req.body.productCategory);
+
+  const productId = highestIdProduct[0]?.id + 1;
+
+  const sanitizedTitle = req?.bodyString("productTitle");
+  const sanitizedDescription = req?.bodyString("productDescription");
+  const sanitizedPrice = req.bodyFloat("productPrice");
+  const sanitizedDiscountPercentage = req.bodyFloat(
+    "productDiscountPercentage"
+  );
+
+  const sanitizedRating = req.bodyFloat("productRating");
+  const sanitizedStock = req.bodyInt("productStock");
+  const sanitizedBrand = req.bodyString("productBrand");
+  const sanitizedCategory = req.bodyOneOf("productCategory", allowedCategories);
 
   /*
    * Validate inputs
    */
   //Validate Title
-  if (sanitizedTitle?.trim().length < 4) {
+  if (!sanitizedTitle || sanitizedTitle.length < 4) {
     return res.status(400).send({
       error: "Product Title must be at least 4 letters",
       field: "productTitle",
     });
   }
-  if (sanitizedTitle?.trim().length > 25) {
+  if (sanitizedTitle.length > 25) {
     return res.status(400).send({
       error: "Product Title must be less than 26 letters",
       field: "productTitle",
     });
   }
-  if (!sanitizedTitle.test(productTitleRegex)) {
+  if (!wordCharacterRegex.test(sanitizedTitle)) {
     return res.status(400).send({
       error: "Product Title must only contain standard characters",
       field: "productTitle",
@@ -99,13 +116,13 @@ router.post("/", (req, res) => {
   }
 
   //Validate Description
-  if (sanitizedDescription?.split().length < 5) {
+  if (sanitizedDescription?.split()?.length < 5) {
     return res.status(400).send({
       error: "Product Description must contain at least 5 words",
       field: "productDescription",
     });
   }
-  if (sanitizedDescription?.split().length > 200) {
+  if (sanitizedDescription?.split()?.length > 200) {
     return res.status(400).send({
       error: "Product Description must contain no more than 200 words",
       field: "productDescription",
@@ -121,7 +138,7 @@ router.post("/", (req, res) => {
   }
   if (sanitizedPrice < 0.01) {
     return res.status(400).send({
-      error: "Product Price must be at least 0.0.1",
+      error: "Product Price must be at least 0.01",
       field: "productPrice",
     });
   }
@@ -142,6 +159,99 @@ router.post("/", (req, res) => {
       field: "productDiscountPercentage",
     });
   }
+
+  //Validate Rating
+  if (typeof sanitizedRating !== "number" || isNaN(sanitizedRating)) {
+    return res.status(400).send({
+      error: "Product Rating must be a number",
+      field: "productRating",
+    });
+  }
+  if (sanitizedRating < 0) {
+    return res.status(400).send({
+      error: "Product Rating must be at least 0",
+      field: "productRating",
+    });
+  }
+  if (sanitizedRating > 5) {
+    return res.status(400).send({
+      error: "Product Rating must not be greater than 5",
+      field: "productRating",
+    });
+  }
+
+  //Validate Stock
+  if (typeof sanitizedStock !== "number" || isNaN(sanitizedStock)) {
+    return res.status(400).send({
+      error: "Product Rating must be a number",
+      field: "productStock",
+    });
+  }
+  if (sanitizedStock < 0) {
+    return res.status(400).send({
+      error: "Product Stock must be at least 0",
+      field: "productStock",
+    });
+  }
+
+  if (sanitizedBrand?.trim().length < 4) {
+    return res.status(400).send({
+      error: "Product Brand must be at least 4 letters",
+      field: "productBrand",
+    });
+  }
+  if (sanitizedBrand?.trim().length > 25) {
+    return res.status(400).send({
+      error: "Product Brand must be less than 26 letters",
+      field: "productBrand",
+    });
+  }
+  if (!wordCharacterRegex.test(sanitizedBrand)) {
+    return res.status(400).send({
+      error: "Product Brand must only contain standard characters",
+      field: "productBrand",
+    });
+  }
+
+  // Validate Category
+  if (!allowedCategories.includes(sanitizedCategory)) {
+    return res.status(400).send({
+      error: "Invalid category",
+      field: "productCategory",
+    });
+  }
+
+  //Save
+  const newProduct = new Product({
+    id: productId,
+    title: sanitizedTitle,
+    description: sanitizedDescription,
+    price: sanitizedPrice,
+    discountPercentage: sanitizedDiscountPercentage,
+    rating: sanitizedRating,
+    stock: sanitizedStock,
+    brand: sanitizedBrand,
+    category: sanitizedCategory,
+    thumbnail: "https://i.dummyjson.com/data/products/1/thumbnail.jpg",
+    images: [
+      "https://i.dummyjson.com/data/products/1/1.jpg",
+      "https://i.dummyjson.com/data/products/1/2.jpg",
+      "https://i.dummyjson.com/data/products/1/3.jpg",
+      "https://i.dummyjson.com/data/products/1/4.jpg",
+      "https://i.dummyjson.com/data/products/1/thumbnail.jpg",
+    ],
+  });
+
+  newProduct
+    .save()
+    .then(() => {
+      res.send(newProduct);
+      console.log("Product saved successfully.");
+    })
+    .catch((error) => {
+      res.status(500).send("Error saving new product");
+      console.error("Error saving product:", error);
+    });
 });
 
 router.put("/:id", (req, res) => {
