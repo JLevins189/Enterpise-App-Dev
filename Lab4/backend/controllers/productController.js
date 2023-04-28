@@ -116,13 +116,13 @@ router.post("/", async (req, res) => {
   }
 
   //Validate Description
-  if (sanitizedDescription?.split()?.length < 5) {
+  if (!sanitizedDescription || sanitizedDescription?.split(" ")?.length < 5) {
     return res.status(400).send({
       error: "Product Description must contain at least 5 words",
       field: "productDescription",
     });
   }
-  if (sanitizedDescription?.split()?.length > 200) {
+  if (sanitizedDescription?.split(" ")?.length > 200) {
     return res.status(400).send({
       error: "Product Description must contain no more than 200 words",
       field: "productDescription",
@@ -130,7 +130,11 @@ router.post("/", async (req, res) => {
   }
 
   //Validate Price
-  if (typeof sanitizedPrice !== "number" || isNaN(sanitizedPrice)) {
+  if (
+    !sanitizedPrice ||
+    typeof sanitizedPrice !== "number" ||
+    isNaN(sanitizedPrice)
+  ) {
     return res.status(400).send({
       error: "Product Price must be a number",
       field: "productPrice",
@@ -145,6 +149,7 @@ router.post("/", async (req, res) => {
 
   //Validate Discount
   if (
+    !sanitizedDiscountPercentage ||
     typeof sanitizedDiscountPercentage !== "number" ||
     isNaN(sanitizedDiscountPercentage)
   ) {
@@ -161,7 +166,11 @@ router.post("/", async (req, res) => {
   }
 
   //Validate Rating
-  if (typeof sanitizedRating !== "number" || isNaN(sanitizedRating)) {
+  if (
+    !sanitizedRating ||
+    typeof sanitizedRating !== "number" ||
+    isNaN(sanitizedRating)
+  ) {
     return res.status(400).send({
       error: "Product Rating must be a number",
       field: "productRating",
@@ -181,7 +190,11 @@ router.post("/", async (req, res) => {
   }
 
   //Validate Stock
-  if (typeof sanitizedStock !== "number" || isNaN(sanitizedStock)) {
+  if (
+    !sanitizedStock ||
+    typeof sanitizedStock !== "number" ||
+    isNaN(sanitizedStock)
+  ) {
     return res.status(400).send({
       error: "Product Rating must be a number",
       field: "productStock",
@@ -194,7 +207,7 @@ router.post("/", async (req, res) => {
     });
   }
 
-  if (sanitizedBrand?.trim().length < 4) {
+  if (!sanitizedBrand || sanitizedBrand?.trim().length < 4) {
     return res.status(400).send({
       error: "Product Brand must be at least 4 letters",
       field: "productBrand",
@@ -214,7 +227,7 @@ router.post("/", async (req, res) => {
   }
 
   // Validate Category
-  if (!allowedCategories.includes(sanitizedCategory)) {
+  if (!sanitizedCategory || !allowedCategories.includes(sanitizedCategory)) {
     return res.status(400).send({
       error: "Invalid category",
       field: "productCategory",
@@ -255,63 +268,174 @@ router.post("/", async (req, res) => {
 });
 
 router.put("/:id", (req, res) => {
-  const id = parseInt(req.params.id);
-  const { hexString, name } = req.body; //Take in hex, convert to other formats
-
-  //Path validation
+  const id = parseInt(req.paramInt("id"));
   if (isNaN(id)) {
-    console.error(`Invalid colourId param ${req.params.id}`);
-    res.status(400).send({
-      error: `Invalid id "${req.params.id}" entered. Please Enter a number`,
+    console.error(`Invalid productId param "${req.paramInt("id")}"`);
+    return res.status(400).send({
+      error: `Invalid id "${req.paramInt(
+        "id"
+      )}" entered. Please Enter a number`,
     });
-    return;
-  }
-  //Body Validation
-  if (!hexValueRegex.test(hexString)) {
-    res.status(400).send({
-      error: `${hexString} is not a valid hex colour string`,
-      field: "hexString",
-    });
-    return;
-  }
-  if (!colourNameRegex.test(name)) {
-    res.status(400).send({
-      error: `${name} is not a valid colour name. Do not use special characters`,
-      field: "name",
-    });
-    return;
   }
 
-  console.log(`PUT request received for colour with id ${id}`);
-  const selectedColourIndex = colours.findIndex((obj) => obj.colorId === id);
+  console.log(`PUT request received for product with id ${id}`);
 
-  //Convert from hex
-  const [r, g, b] = hexStringToRgbValues(hexString);
-  const hsl = rgbToHsl(r, g, b);
-
-  const newColour = {
-    colorId: id,
-    hexString,
-    rgb: { r, g, b },
-    hsl,
-    name,
-  };
-
-  let statusCode = 200; //201 if new obj
-
-  if (selectedColourIndex !== -1) {
-    //if exists already
-    colours[selectedColourIndex] = newColour;
-  } else {
-    colours.push(newColour); //add new colour
-    statusCode = 201;
-  }
-  res.status(statusCode).send({ colour: newColour, uri: `/colours/${id}` });
-
-  fs.writeFileSync(
-    path.join(__dirname, "..", "public", "data.json"),
-    JSON.stringify(colours, null, 2)
+  const sanitizedTitle = req?.bodyString("productTitle");
+  const sanitizedDescription = req?.bodyString("productDescription");
+  const sanitizedPrice = req.bodyFloat("productPrice");
+  const sanitizedDiscountPercentage = req.bodyFloat(
+    "productDiscountPercentage"
   );
+
+  const sanitizedRating = req.bodyFloat("productRating");
+  const sanitizedStock = req.bodyInt("productStock");
+
+  /*
+   * Validate inputs
+   */
+  //Validate Title
+  if (!sanitizedTitle || sanitizedTitle.length < 4) {
+    return res.status(400).send({
+      error: "Product Title must be at least 4 letters",
+      field: "productTitle",
+    });
+  }
+  if (sanitizedTitle.length > 25) {
+    return res.status(400).send({
+      error: "Product Title must be less than 26 letters",
+      field: "productTitle",
+    });
+  }
+  if (!wordCharacterRegex.test(sanitizedTitle)) {
+    return res.status(400).send({
+      error: "Product Title must only contain standard characters",
+      field: "productTitle",
+    });
+  }
+
+  //Validate Description
+  if (!sanitizedDescription || sanitizedDescription?.split(" ")?.length < 5) {
+    return res.status(400).send({
+      error: "Product Description must contain at least 5 words",
+      field: "productDescription",
+    });
+  }
+  if (sanitizedDescription?.split(" ")?.length > 200) {
+    return res.status(400).send({
+      error: "Product Description must contain no more than 200 words",
+      field: "productDescription",
+    });
+  }
+
+  //Validate Price
+  if (
+    !sanitizedPrice ||
+    typeof sanitizedPrice !== "number" ||
+    isNaN(sanitizedPrice)
+  ) {
+    return res.status(400).send({
+      error: "Product Price must be a number",
+      field: "productPrice",
+    });
+  }
+  if (sanitizedPrice < 0.01) {
+    return res.status(400).send({
+      error: "Product Price must be at least 0.01",
+      field: "productPrice",
+    });
+  }
+
+  //Validate Discount
+  if (
+    !sanitizedDiscountPercentage ||
+    typeof sanitizedDiscountPercentage !== "number" ||
+    isNaN(sanitizedDiscountPercentage)
+  ) {
+    return res.status(400).send({
+      error: "Product Discount must be a number",
+      field: "productDiscountPercentage",
+    });
+  }
+  if (sanitizedDiscountPercentage < 0) {
+    return res.status(400).send({
+      error: "Product Discount must be at least 0",
+      field: "productDiscountPercentage",
+    });
+  }
+
+  //Validate Rating
+  if (
+    !sanitizedRating ||
+    typeof sanitizedRating !== "number" ||
+    isNaN(sanitizedRating)
+  ) {
+    return res.status(400).send({
+      error: "Product Rating must be a number",
+      field: "productRating",
+    });
+  }
+  if (sanitizedRating < 0) {
+    return res.status(400).send({
+      error: "Product Rating must be at least 0",
+      field: "productRating",
+    });
+  }
+  if (sanitizedRating > 5) {
+    return res.status(400).send({
+      error: "Product Rating must not be greater than 5",
+      field: "productRating",
+    });
+  }
+
+  //Validate Stock
+  if (
+    !sanitizedStock ||
+    typeof sanitizedStock !== "number" ||
+    isNaN(sanitizedStock)
+  ) {
+    return res.status(400).send({
+      error: "Product Rating must be a number",
+      field: "productStock",
+    });
+  }
+  if (sanitizedStock < 0) {
+    return res.status(400).send({
+      error: "Product Stock must be at least 0",
+      field: "productStock",
+    });
+  }
+
+  //Update Record
+  Product.findOne({ id })
+    .then((product) => {
+      if (product) {
+        const newProduct = new Product({
+          id: product?.id, //shouldn't be changed
+          title: sanitizedTitle,
+          description: sanitizedDescription,
+          price: sanitizedPrice,
+          discountPercentage: sanitizedDiscountPercentage,
+          rating: sanitizedRating,
+          stock: sanitizedStock,
+          brand: product?.brand, //shouldn't need to change
+          category: product?.category, //shouldn't need to change
+          thumbnail: product?.thumbnail,
+          images: product?.images,
+        });
+        product?.replaceOne(newProduct);
+        res.send(newProduct);
+        console.log(`Product with id ${id} updated`);
+      } else {
+        res.status(404).send({ error: `Product not found with id ${id}` });
+        return console.warn(`Product not found with id ${id}`);
+      }
+    })
+    .catch((error) => {
+      res
+        .status(500)
+        .send({ error: "An error occurred while finding the product" });
+      return console.error(`Error finding product with id: ${id}`, error);
+    });
 });
 
 router.delete("/:id", (req, res) => {
@@ -329,8 +453,8 @@ router.delete("/:id", (req, res) => {
     .then((product) => {
       if (product) {
         product?.deleteOne();
-        console.log(`Colour with id ${id} deleted`);
-        res.send("Colour successfully deleted");
+        console.log(`Product with id ${id} deleted`);
+        res.send("Product successfully deleted");
       } else {
         res.status(404).send({ error: `Product not found with id ${id}` });
         return console.warn(`Product not found with id ${id}`);
