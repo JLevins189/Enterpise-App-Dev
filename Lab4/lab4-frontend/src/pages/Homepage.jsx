@@ -10,6 +10,7 @@ import EditColourModal from "modals/EditColourModal.jsx";
 import DeleteColourModal from "modals/DeleteColourModal.jsx";
 // import Explaination from "util/Explaination.jsx";
 import Container from "react-bootstrap/Container";
+import { Button } from "react-bootstrap";
 
 //TODO CORS
 function Homepage() {
@@ -90,8 +91,7 @@ function Homepage() {
               listHeading={`All Products ${
                 productData?.length ? `(${productData?.length})` : null
               }`}
-              //TODO
-              //   createElementComponent,
+              createElementComponent={<Button>Add New Product</Button>}
               searchPlaceholder={"Product Name/Brand"}
               searchValue={searchQuery}
               searchOnChange={setSearchQuery}
@@ -99,12 +99,12 @@ function Homepage() {
             {/* <ProductDataList /> */}
             <ProductDataList
               productData={productData}
-            //   setEditColourModalOpen={setEditColourModalOpen}
-            //   setDeleteColourModalOpen={setDeleteColourModalOpen}
-            //   setSelectedColourId={setSelectedColourId}
-            //   setBackgroundColor={setBackgroundColor}
-            //   rememberedRowIndex={rememberedRowIndex}
-            //   setRememberedRowIndex={setRememberedRowIndex}
+              //   setEditColourModalOpen={setEditColourModalOpen}
+              //   setDeleteColourModalOpen={setDeleteColourModalOpen}
+              //   setSelectedColourId={setSelectedColourId}
+              //   setBackgroundColor={setBackgroundColor}
+              //   rememberedRowIndex={rememberedRowIndex}
+              //   setRememberedRowIndex={setRememberedRowIndex}
             />
             {/* <AddColourModal
               modalOpen={addColourModalOpen}
