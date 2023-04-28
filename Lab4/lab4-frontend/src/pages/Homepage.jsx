@@ -1,14 +1,14 @@
 import { useState, useEffect, useMemo } from "react";
-import axiosInstance from "@util/AxiosInstance.jsx";
+import axiosInstance from "util/AxiosInstance.jsx";
 import Navbar from "../Navbar.jsx";
-import ColourListHeader from "@listComponents/ColourListHeader.jsx";
-import ColourDataList from "@listComponents/ColourDataList.jsx";
-import LoadingSpinner from "@util/LoadingSpinner.jsx";
-import FetchError from "@util/FetchError.jsx";
-import AddColourModal from "@modals/AddColourModal.jsx";
-import EditColourModal from "@modals/EditColourModal.jsx";
-import DeleteColourModal from "@modals/DeleteColourModal.jsx";
-// import Explaination from "@util/Explaination.jsx";
+import ProductListHeader from "listComponents/ProductListHeader.jsx";
+import ProductDataList from "listComponents/ProductDataList.jsx";
+import LoadingSpinner from "util/LoadingSpinner.jsx";
+import FetchError from "util/FetchError.jsx";
+import AddColourModal from "modals/AddColourModal.jsx";
+import EditColourModal from "modals/EditColourModal.jsx";
+import DeleteColourModal from "modals/DeleteColourModal.jsx";
+// import Explaination from "util/Explaination.jsx";
 import Container from "react-bootstrap/Container";
 
 //TODO CORS
@@ -28,15 +28,14 @@ function Homepage() {
     useState(false);
   const [fetchErrorOccurred, setFetchErrorOccurred] = useState(false);
 
-  const [addColourModalOpen, setAddColourModalOpen] = useState(false);
-  const [editColourModalOpen, setEditColourModalOpen] = useState(false);
-  const [deleteColourModalOpen, setDeleteColourModalOpen] = useState(false);
+  //   const [addColourModalOpen, setAddColourModalOpen] = useState(false);
+  //   const [editColourModalOpen, setEditColourModalOpen] = useState(false);
+  //   const [deleteColourModalOpen, setDeleteColourModalOpen] = useState(false);
 
-  const [selectedColourId, setSelectedColourId] = useState(-1); //for edit/delete button
-  const [rememberedRowIndex, setRememberedRowIndex] = useState(-1); //for cookie functionality
-  const [backgroundColor, setBackgroundColor] = useState(
-    cookies?.backgroundColour
-  );
+  //   const [selectedColourId, setSelectedColourId] = useState(-1); //for edit/delete button
+  //   const [rememberedRowIndex, setRememberedRowIndex] = useState(-1); //for cookie functionality
+
+  const [searchQuery, setSearchQuery] = useState("");
   const [productData, setProductData] = useState([]);
 
   useEffect(() => {
@@ -78,7 +77,6 @@ function Homepage() {
         className="mt-4"
         style={{
           maxWidth: "1920px",
-          backgroundColor,
         }}
       >
         {/* <Explaination /> */}
@@ -88,17 +86,27 @@ function Homepage() {
           <FetchError />
         ) : (
           <>
-            <ColourListHeader setAddColourModalOpen={setAddColourModalOpen} />
-            <ColourDataList
-              colourData={productData}
-              setEditColourModalOpen={setEditColourModalOpen}
-              setDeleteColourModalOpen={setDeleteColourModalOpen}
-              setSelectedColourId={setSelectedColourId}
-              setBackgroundColor={setBackgroundColor}
-              rememberedRowIndex={rememberedRowIndex}
-              setRememberedRowIndex={setRememberedRowIndex}
+            <ProductListHeader
+              listHeading={`All Products ${
+                productData?.length ? `(${productData?.length})` : null
+              }`}
+              //TODO
+              //   createElementComponent,
+              searchPlaceholder={"Product Name/Brand"}
+              searchValue={searchQuery}
+              searchOnChange={setSearchQuery}
             />
-            <AddColourModal
+            {/* <ProductDataList /> */}
+            <ProductDataList
+              productData={productData}
+            //   setEditColourModalOpen={setEditColourModalOpen}
+            //   setDeleteColourModalOpen={setDeleteColourModalOpen}
+            //   setSelectedColourId={setSelectedColourId}
+            //   setBackgroundColor={setBackgroundColor}
+            //   rememberedRowIndex={rememberedRowIndex}
+            //   setRememberedRowIndex={setRememberedRowIndex}
+            />
+            {/* <AddColourModal
               modalOpen={addColourModalOpen}
               setModalOpen={setAddColourModalOpen}
               setColourData={setProductData}
@@ -120,7 +128,7 @@ function Homepage() {
                 setColourData={setProductData}
                 selectedColourId={selectedColourId}
               />
-            )}
+            )} */}
           </>
         )}
       </Container>
