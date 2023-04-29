@@ -14,7 +14,7 @@ function Homepage() {
     useState(false);
   const [fetchErrorOccurred, setFetchErrorOccurred] = useState(false);
 
-  const [addColourModalOpen, setAddColourModalOpen] = useState(false);
+  const [addProductModalOpen, setAddProductModalOpen] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [productData, setProductData] = useState([]);
@@ -54,7 +54,7 @@ function Homepage() {
               productData?.length ? `(${productData?.length})` : null
             }`}
             createElementComponent={
-              <Button onClick={() => setAddColourModalOpen(true)}>
+              <Button onClick={() => setAddProductModalOpen(true)}>
                 Add New Product
               </Button>
             }
@@ -64,8 +64,8 @@ function Homepage() {
           />
           <ProductDataList productData={productData} />
           <AddProductModal
-            modalOpen={addColourModalOpen}
-            setModalOpen={setAddColourModalOpen}
+            modalOpen={addProductModalOpen}
+            setModalOpen={setAddProductModalOpen}
             setProductData={setProductData}
           />
         </>

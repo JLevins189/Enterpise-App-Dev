@@ -1,10 +1,10 @@
 import Container from "react-bootstrap/Container";
 
-function FetchError() {
+function FetchError({ error, suggestion }) {
   return (
     <Container>
-      <h1>Fetching Colours Failed.</h1>
-      <p>Please refresh </p>
+      <h1>{error || "Fetching Products Failed."}</h1>
+      <p>{suggestion || "Please refresh"} </p>
     </Container>
   );
 }

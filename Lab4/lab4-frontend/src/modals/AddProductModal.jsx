@@ -35,7 +35,7 @@ function AddProductModal({ modalOpen, setModalOpen, setProductData }) {
     return false;
   };
 
-  const handleAddColourRequest = async () => {
+  const handleAddProductRequest = async () => {
     try {
       const response = await axiosInstance.post("/products", {
         productTitle,
@@ -100,21 +100,21 @@ function AddProductModal({ modalOpen, setModalOpen, setProductData }) {
           {errorMessage?.requestError ? (
             <Alert variant="danger" className="mt-3">
               {errorMessage?.requestError ||
-                "An error occurred adding the colour"}
+                "An error occurred adding the product"}
             </Alert>
           ) : null}
 
           {/* success alert */}
           {successAddingProduct ? (
             <Alert variant="success" className="mt-3">
-              Colour added successfully
+              Product added successfully
             </Alert>
           ) : null}
         </>
       }
       isButtonDisabled={isButtonDisabled()}
-      saveHandler={handleAddColourRequest}
-      saveButtonText={"Save Colour"}
+      saveHandler={handleAddProductRequest}
+      saveButtonText={"Save Product"}
       closable
     />
   );

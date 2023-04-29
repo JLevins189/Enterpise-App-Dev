@@ -11,11 +11,6 @@ function ProductViewPage() {
   const [fetchProductRequestComplete, setFetchProductRequestComplete] =
     useState(false);
   const [fetchErrorOccurred, setFetchErrorOccurred] = useState(false);
-
-  const [addColourModalOpen, setAddColourModalOpen] = useState(false);
-  //   const [editColourModalOpen, setEditColourModalOpen] = useState(false);
-  //   const [deleteColourModalOpen, setDeleteColourModalOpen] = useState(false);
-
   const [productData, setProductData] = useState({});
 
   useEffect(() => {
@@ -46,7 +41,10 @@ function ProductViewPage() {
         {!fetchProductRequestComplete ? (
           <LoadingSpinner />
         ) : fetchErrorOccurred ? (
-          <FetchError />
+          <FetchError
+            error="An error occured fetching this product"
+            suggestion="It may not exist or is temporarily unavailable"
+          />
         ) : (
           <ProductView
             productData={productData}

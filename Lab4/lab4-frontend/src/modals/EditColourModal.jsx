@@ -43,7 +43,7 @@ function EditProductModal({
     return false;
   };
 
-  const handleEditColourRequest = async () => {
+  const handleEditProductRequest = async () => {
     setSuccessEditingProduct((prev) => false);
 
     try {
@@ -118,7 +118,7 @@ function EditProductModal({
         </>
       }
       isButtonDisabled={isButtonDisabled()}
-      saveHandler={handleEditColourRequest}
+      saveHandler={handleEditProductRequest}
       saveButtonText={"Save Changes"}
       closable
     />

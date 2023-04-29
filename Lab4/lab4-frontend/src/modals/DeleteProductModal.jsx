@@ -11,7 +11,7 @@ function DeleteProductModal({ modalOpen, setModalOpen, product }) {
   const [successDeletingProduct, setSuccessDeletingProduct] = useState(false);
   const [errorMessage, setErrorMessage] = useState({});
 
-  const handleDeleteColourRequest = async () => {
+  const handleDeleteProductRequest = async () => {
     setSuccessDeletingProduct((prev) => false);
 
     try {
@@ -56,20 +56,20 @@ function DeleteProductModal({ modalOpen, setModalOpen, product }) {
           {errorMessage?.requestError ? (
             <Alert variant="danger" className="mt-3">
               {errorMessage?.requestError ||
-                "An error occurred deleting the colour"}
+                "An error occurred deleting the product"}
             </Alert>
           ) : null}
 
           {/* success alert */}
           {successDeletingProduct ? (
             <Alert variant="success" className="mt-3">
-              Colour deleted successfully
+              Product deleted successfully
             </Alert>
           ) : null}
         </>
       }
-      saveHandler={handleDeleteColourRequest}
-      saveButtonText={"Delete Colour"}
+      saveHandler={handleDeleteProductRequest}
+      saveButtonText={"Delete Product"}
       buttonVariant="danger"
       closable
     />
