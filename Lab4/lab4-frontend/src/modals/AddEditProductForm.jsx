@@ -1,7 +1,5 @@
 import { useEffect, useRef } from "react";
 import Form from "react-bootstrap/Form";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
 import Rating from "react-rating";
 
 function AddProductColourForm(props) {
@@ -244,17 +242,22 @@ function AddProductColourForm(props) {
         </Form.Label>
         <textarea
           id="productDescription"
-          className="form-control"
+          className={`form-control ${
+            errorMessage?.productDescription !== null ? "is-invalid" : null
+          }`}
           autoComplete="off"
           placeholder="e.g This product features..."
           isInvalid={errorMessage?.productDescription}
-          onChange={(event) => setProductDescription(event.target.value)} //update state on change
+          onChange={(event) => {
+            console.log(event.target.value, productDescription);
+            setProductDescription(event.target.value);
+          }} //update state on change
           value={productDescription} //value = state value
           required
         />
         <Form.Control.Feedback type="invalid">
           {errorMessage.productDescription}
-        </Form.Control.Feedback>
+        </Form.Control.Feedback>{" "}
       </Form.Group>
 
       <Form.Group className="my-2">
