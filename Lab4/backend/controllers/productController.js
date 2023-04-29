@@ -258,7 +258,7 @@ router.post("/", async (req, res) => {
   newProduct
     .save()
     .then(() => {
-      res.send(newProduct);
+      res.status(201).send(newProduct);
       console.log("Product saved successfully.");
     })
     .catch((error) => {
