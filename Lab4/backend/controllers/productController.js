@@ -196,7 +196,7 @@ router.post("/", async (req, res) => {
     isNaN(sanitizedStock)
   ) {
     return res.status(400).send({
-      error: "Product Rating must be a number",
+      error: "Product Stock must be a number",
       field: "productStock",
     });
   }
