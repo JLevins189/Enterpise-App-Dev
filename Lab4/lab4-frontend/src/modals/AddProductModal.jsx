@@ -62,7 +62,8 @@ function AddProductModal({ modalOpen, setModalOpen, setColourData }) {
     <CustomModal
       modalOpen={modalOpen}
       setModalOpen={setModalOpen}
-      modalTitle={"Title"}
+      modalTitle={"Add Product"}
+      size="lg"
       modalBody={
         <>
           <AddProductColourForm
