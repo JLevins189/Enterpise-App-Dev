@@ -31,11 +31,11 @@ function ProductListElement({ productElement }) {
                 {`${productElement?.brand} ${productElement?.title}`}
               </Link>
             </Card.Title>
-            <Card.Text>
-              <div className="product-desc ">{productElement?.description}</div>
+            <Card.Text className="product-desc ">
+              {productElement?.description}
             </Card.Text>
           </div>
-          <Card.Text className="text-center fs-4 mt-4">
+          <div className="text-center fs-4 mt-4">
             <Rating
               initialRating={productElement?.rating}
               readonly
@@ -43,7 +43,7 @@ function ProductListElement({ productElement }) {
               fullSymbol={<i className="bi bi-star-fill"></i>}
               fractions={10}
             />
-            <p class="item-price mt-3">
+            <p className="item-price mt-3">
               <strike className="text-danger">
                 ${productElement?.price?.toFixed(2)}
               </strike>
@@ -59,7 +59,7 @@ function ProductListElement({ productElement }) {
             {productElement?.stock < 10 && (
               <p className="text-danger fs-5">Low Stock</p>
             )}
-          </Card.Text>
+          </div>
         </Card.Body>
       </Card>
     </Col>
