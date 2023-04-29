@@ -11,6 +11,10 @@ export default defineConfig({
       { find: "modals", replacement: "/src/modals" },
       { find: "assets", replacement: "/src/assets" },
       { find: "listComponents", replacement: "/src/listComponents" },
+      {
+        find: "productViewComponent",
+        replacement: "/src/productViewComponent",
+      },
       { find: "pages", replacement: "/src/pages" },
     ],
   },
