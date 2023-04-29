@@ -10,7 +10,7 @@ import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 
 //TODO search, add pics
-function Homepage() {
+function ProductViewPage() {
   const cookies = useMemo(() => {
     const cookiesArr = document?.cookie?.split("; ");
 
@@ -110,4 +110,4 @@ function Homepage() {
   );
 }
 
-export default Homepage;
+export default ProductViewPage;

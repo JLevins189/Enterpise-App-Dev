@@ -1,48 +1,9 @@
+import { Link } from "react-router-dom";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Badge from "react-bootstrap/Badge";
 import Rating from "react-rating";
-function ProductListElement({
-  productElement,
-  colourElement,
-  setEditColourModalOpen,
-  setDeleteColourModalOpen,
-  setSelectedColourId,
-  setBackgroundColor,
-  rememberedRowIndex,
-  setRememberedRowIndex,
-}) {
-  // const handleEdit = () => {
-  //   rememberColourIndexCookie();
-  //   setSelectedColourId((prev) => colourElement?.colorId);
-  //   setEditColourModalOpen(true);
-  // };
-
-  // const handleDelete = () => {
-  //   rememberColourIndexCookie();
-  //   setSelectedColourId((prev) => colourElement?.colorId);
-  //   setDeleteColourModalOpen(true);
-  // };
-
-  // const handleSetAsBackground = () => {
-  //   rememberColourIndexCookie();
-  //   setBackgroundColor(colourElement?.hexString);
-  //   const cookieExpiry = "max-age=" + 60 * 60 * 24 * 7 * 52; // 52 weeks (1yr)
-  //   document.cookie =
-  //     `backgroundColour=${colourElement?.hexString};` +
-  //     cookieExpiry +
-  //     ";path=/;";
-  // };
-
-  // //Call this for all buttons and scroll to this colour on refresh
-  // const rememberColourIndexCookie = () => {
-  //   setRememberedRowIndex(colourElement?.colorId);
-  //   const cookieExpiry = "max-age=" + 60 * 60 * 24 * 7 * 52; // 52 weeks (1yr)
-  //   document.cookie =
-  //     `rememberedRowIndex=${colourElement?.colorId};` +
-  //     cookieExpiry +
-  //     ";path=/;";
-  // };
+function ProductListElement({ productElement }) {
   const calculateDiscountedPrice = (originalPrice, discountPercentage) => {
     return originalPrice - originalPrice * (discountPercentage / 100);
   };
@@ -65,7 +26,11 @@ function ProductListElement({
         </div>
         <Card.Body>
           <div style={{ height: "6rem" }}>
-            <Card.Title>{`${productElement?.brand} ${productElement?.title}`}</Card.Title>
+            <Card.Title>
+              <Link to={`/${productElement?._id}`}>
+                {`${productElement?.brand} ${productElement?.title}`}
+              </Link>
+            </Card.Title>
             <Card.Text>
               <div className="product-desc ">{productElement?.description}</div>
             </Card.Text>
