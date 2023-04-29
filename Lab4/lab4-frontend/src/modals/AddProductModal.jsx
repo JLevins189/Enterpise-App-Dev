@@ -1,6 +1,6 @@
 import { useState } from "react";
 import CustomModal from "./CustomModal";
-import AddProductColourForm from "./AddEditProductForm";
+import AddProductForm from "./AddProductForm";
 import axiosInstance from "util/AxiosInstance";
 import Alert from "react-bootstrap/Alert";
 
@@ -30,7 +30,6 @@ function AddProductModal({ modalOpen, setModalOpen, setProductData }) {
       errorMessage?.productBrand !== null ||
       errorMessage?.productCategory !== null
     ) {
-      console.log("disabled", errorMessage);
       return true;
     }
     return false;
@@ -82,7 +81,7 @@ function AddProductModal({ modalOpen, setModalOpen, setProductData }) {
       size="lg"
       modalBody={
         <>
-          <AddProductColourForm
+          <AddProductForm
             productTitle={{ productTitle, setProductTitle }}
             productDescription={{ productDescription, setProductDescription }}
             productPrice={{ productPrice, setProductPrice }}

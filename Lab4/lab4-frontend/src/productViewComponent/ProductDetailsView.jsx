@@ -1,9 +1,11 @@
 import DeleteProductModal from "modals/DeleteProductModal";
+import EditProductModal from "modals/EditColourModal";
 import { useState } from "react";
 import { Button } from "react-bootstrap";
 import Rating from "react-rating";
 
-function ProductDetailsView({ productData }) {
+function ProductDetailsView({ productData, setProductData }) {
+  const [editProductModalOpen, setEditProductModalOpen] = useState(false);
   const [deleteProductModalOpen, setDeleteProductModalOpen] = useState(false);
   return (
     <div>
@@ -44,7 +46,9 @@ function ProductDetailsView({ productData }) {
         )}
       </div>
       <div className="d-inline-block me-4">
-        <Button>Edit Product</Button>
+        <Button onClick={() => setEditProductModalOpen((prev) => true)}>
+          Edit Product
+        </Button>
       </div>
       <div className="d-inline-block">
         <Button
@@ -55,6 +59,12 @@ function ProductDetailsView({ productData }) {
         </Button>
       </div>
       <div className="mb-4"></div>
+      <EditProductModal
+        modalOpen={editProductModalOpen}
+        setModalOpen={setEditProductModalOpen}
+        product={productData}
+        setProductData={setProductData}
+      />
       <DeleteProductModal
         modalOpen={deleteProductModalOpen}
         setModalOpen={setDeleteProductModalOpen}

@@ -4,7 +4,7 @@ import ProductImageView from "./ProductImageView";
 import ProductDetailsView from "./ProductDetailsView";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 
-function ProductView({ productData }) {
+function ProductView({ productData, setProductData }) {
   return (
     <>
       <Row className="mb-4 px-1 px-lg-5">
@@ -24,7 +24,10 @@ function ProductView({ productData }) {
           <ProductImageView productImages={productData?.images} />
         </Col>
         <Col lg={6} className="ps-4 ms-lg-0">
-          <ProductDetailsView productData={productData} />
+          <ProductDetailsView
+            productData={productData}
+            setProductData={setProductData}
+          />
         </Col>
       </Row>
     </>

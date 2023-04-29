@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import Form from "react-bootstrap/Form";
 import Rating from "react-rating";
 
-function AddProductColourForm(props) {
+function EditProductForm(props) {
   const productTitleRef = useRef();
   const { productTitle, setProductTitle } = props?.productTitle;
   const { productDescription, setProductDescription } =
@@ -12,8 +12,8 @@ function AddProductColourForm(props) {
     props?.productDiscountPercentage;
   const { productRating, setProductRating } = props?.productRating;
   const { productStock, setProductStock } = props?.productStock;
-  const { productBrand, setProductBrand } = props?.productBrand;
-  const { productCategory, setProductCategory } = props?.productCategory;
+  const { productBrand } = props?.productBrand;
+  const { productCategory } = props?.productCategory;
 
   const { errorMessage, setErrorMessage } = props?.errorMessage;
 
@@ -156,11 +156,7 @@ function AddProductColourForm(props) {
   }, [productRating]);
 
   useEffect(() => {
-    if (
-      !productStock ||
-      typeof productStock !== "number" ||
-      isNaN(productStock)
-    ) {
+    if (typeof productStock !== "number" || isNaN(productStock)) {
       setErrorMessage((prev) => ({
         ...prev,
         productStock: "Product Stock must be a number",
@@ -177,44 +173,6 @@ function AddProductColourForm(props) {
 
     setErrorMessage((prev) => ({ ...prev, productStock: null }));
   }, [productStock]);
-
-  useEffect(() => {
-    if (!productBrand || productBrand?.trim().length < 4) {
-      setErrorMessage((prev) => ({
-        ...prev,
-        productBrand: "Product Brand must be at least 4 letters",
-      }));
-      return;
-    }
-    if (productBrand?.trim().length > 25) {
-      setErrorMessage((prev) => ({
-        ...prev,
-        productBrand: "Product Brand must be less than 26 letters",
-      }));
-      return;
-    }
-    if (!wordCharacterRegex.test(productBrand)) {
-      setErrorMessage((prev) => ({
-        ...prev,
-        productBrand: "Product Brand must only contain standard characters",
-      }));
-      return;
-    }
-
-    setErrorMessage((prev) => ({ ...prev, productBrand: null }));
-  }, [productBrand]);
-
-  useEffect(() => {
-    if (!productCategory || !allowedCategories.includes(productCategory)) {
-      setErrorMessage((prev) => ({
-        ...prev,
-        productCategory: "Invalid category",
-      }));
-      return;
-    }
-
-    setErrorMessage((prev) => ({ ...prev, productCategory: null }));
-  }, [productCategory]);
 
   return (
     <Form>
@@ -347,7 +305,8 @@ function AddProductColourForm(props) {
           placeholder="e.g Apple"
           autoComplete="off"
           isInvalid={errorMessage?.productBrand}
-          onChange={(event) => setProductBrand(event.target.value)} //update state on change
+          readonly
+          disabled
           value={productBrand} //value = state value
           required
         />
@@ -360,9 +319,9 @@ function AddProductColourForm(props) {
         <Form.Label htmlFor="productCategory">Product Category:</Form.Label>
         <Form.Select
           id="productCategory"
-          // size="lg"
           value={productCategory}
-          onChange={(e) => setProductCategory(e.target.value)}
+          readonly
+          disabled
         >
           {allowedCategories.map((category, i) => (
             <option value={category} key={i}>
@@ -375,4 +334,4 @@ function AddProductColourForm(props) {
     </Form>
   );
 }
-export default AddProductColourForm;
+export default EditProductForm;

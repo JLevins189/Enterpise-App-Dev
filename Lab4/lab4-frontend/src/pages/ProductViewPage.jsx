@@ -48,7 +48,10 @@ function ProductViewPage() {
         ) : fetchErrorOccurred ? (
           <FetchError />
         ) : (
-          <ProductView productData={productData} />
+          <ProductView
+            productData={productData}
+            setProductData={setProductData}
+          />
         )}
       </Container>
     </>

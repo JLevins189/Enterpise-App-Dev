@@ -1,78 +1,74 @@
 import { useState } from "react";
-import axiosInstance from "@util/AxiosInstance";
+import axiosInstance from "util/AxiosInstance";
 import CustomModal from "./CustomModal";
-import AddEditColourForm from "./AddEditColourForm";
 import Alert from "react-bootstrap/Alert";
+import { useParams } from "react-router-dom";
+import EditProductForm from "./EditProductForm";
 
-function EditColourModal({
+function EditProductModal({
   modalOpen,
   setModalOpen,
-  colourData,
-  setColourData,
-  selectedColourId,
+  product,
+  setProductData,
 }) {
-  const objectBeingUpdated = colourData?.find(
-    (colour) => colour.colorId === selectedColourId
-  );
+  const { productId } = useParams();
+  const [successEditingProduct, setSuccessEditingProduct] = useState(false);
 
-  const [successEditingColour, setSuccessEditingColour] = useState(false);
-  const [colourName, setColourName] = useState(objectBeingUpdated?.name);
-  const [hexValue, setHexValue] = useState(objectBeingUpdated?.hexString);
+  const [productTitle, setProductTitle] = useState(product?.title);
+  const [productDescription, setProductDescription] = useState(
+    product?.description
+  );
+  const [productPrice, setProductPrice] = useState(product?.price);
+  const [productDiscountPercentage, setProductDiscountPercentage] = useState(
+    product?.discountPercentage
+  );
+  const [productRating, setProductRating] = useState(product?.rating);
+  const [productStock, setProductStock] = useState(product?.stock);
+  const [productBrand, setProductBrand] = useState(product?.brand);
+  const [productCategory, setProductCategory] = useState(product?.category);
+
   const [errorMessage, setErrorMessage] = useState({});
 
   const isButtonDisabled = () => {
-    if (errorMessage?.colourName !== null || errorMessage?.hexValue !== null) {
+    if (
+      errorMessage?.productTitle !== null ||
+      errorMessage?.productDescription !== null ||
+      errorMessage?.productPrice !== null ||
+      errorMessage?.productDiscountPercentage !== null ||
+      errorMessage?.productRating !== null ||
+      errorMessage?.productStock !== null
+    ) {
       return true;
     }
     return false;
   };
 
   const handleEditColourRequest = async () => {
-    if (selectedColourId === -1) {
-      //Remove success alert
-      setSuccessEditingColour((prev) => false);
+    setSuccessEditingProduct((prev) => false);
 
-      //Show error alert
-      setErrorMessage((prev) => ({
-        ...prev,
-        requestError: "Invalid colour id",
-      }));
-      return;
-    }
     try {
-      const response = await axiosInstance.put(`/colours/${selectedColourId}`, {
-        hexString: hexValue,
-        name: colourName,
+      const response = await axiosInstance.put(`/products/${productId}`, {
+        productTitle,
+        productDescription,
+        productPrice,
+        productDiscountPercentage,
+        productRating,
+        productStock,
       });
 
-      //success (created new)
-      if (response?.status === 200) {
-        //Edit in current list
-        setColourData((prev) => {
-          const index = colourData.findIndex(
-            (colour) => colour?.colorId === response?.data?.colour?.colorId
-          );
-          const updatedArray = [...prev];
-          updatedArray[index] = response?.data?.colour;
-          return updatedArray;
-        });
-      }
-      if (response?.status === 201) {
-        //Add to current list
-        setColourData((prev) => [...prev, response?.data]);
-      }
-
-      //Add success alert
-      setSuccessEditingColour((prev) => true);
-      //Clear error
       setErrorMessage((prev) => ({
         ...prev,
         requestError: null,
       }));
+      setProductData(response?.data);
+
+      //Add success alert
+      setSuccessEditingProduct((prev) => true);
+      //Clear error
     } catch (err) {
       console.log(err);
       //Remove success alert
-      setSuccessEditingColour((prev) => false);
+      setSuccessEditingProduct((prev) => false);
 
       //Show error alert
       setErrorMessage((prev) => ({
@@ -86,12 +82,22 @@ function EditColourModal({
     <CustomModal
       modalOpen={modalOpen}
       setModalOpen={setModalOpen}
-      modalTitle={"Title"}
+      size="lg"
+      modalTitle={"Edit Product"}
       modalBody={
         <>
-          <AddEditColourForm
-            colourName={{ colourName, setColourName }}
-            hexValue={{ hexValue, setHexValue }}
+          <EditProductForm
+            productTitle={{ productTitle, setProductTitle }}
+            productDescription={{ productDescription, setProductDescription }}
+            productPrice={{ productPrice, setProductPrice }}
+            productDiscountPercentage={{
+              productDiscountPercentage,
+              setProductDiscountPercentage,
+            }}
+            productRating={{ productRating, setProductRating }}
+            productStock={{ productStock, setProductStock }}
+            productBrand={{ productBrand }}
+            productCategory={{ productCategory }}
             errorMessage={{ errorMessage, setErrorMessage }}
           />
 
@@ -99,14 +105,14 @@ function EditColourModal({
           {errorMessage?.requestError ? (
             <Alert variant="danger" className="mt-3">
               {errorMessage?.requestError ||
-                "An error occurred editing the colour"}
+                "An error occurred editing the product"}
             </Alert>
           ) : null}
 
           {/* success alert */}
-          {successEditingColour ? (
+          {successEditingProduct ? (
             <Alert variant="success" className="mt-3">
-              Colour edited successfully
+              Product edited successfully
             </Alert>
           ) : null}
         </>
@@ -119,4 +125,4 @@ function EditColourModal({
   );
 }
 
-export default EditColourModal;
+export default EditProductModal;
