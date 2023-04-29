@@ -27,7 +27,7 @@ function ProductListElement({ productElement }) {
         <Card.Body>
           <div style={{ height: "6rem" }}>
             <Card.Title>
-              <Link to={`/${productElement?._id}`}>
+              <Link to={`/${productElement?.id}`}>
                 {`${productElement?.brand} ${productElement?.title}`}
               </Link>
             </Card.Title>
