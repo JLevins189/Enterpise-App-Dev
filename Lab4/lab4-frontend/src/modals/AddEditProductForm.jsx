@@ -174,7 +174,7 @@ function AddProductColourForm(props) {
 
       <Form.Group>
         <Form.Label htmlFor="productRating">Product Rating (0-5):</Form.Label>
-        <div className="text-center fs-5">
+        <div className="text-center fs-5 text-primary">
           <Rating
             initialRating={productRating}
             emptySymbol={<i className="bi bi-star"></i>}
@@ -207,6 +207,7 @@ function AddProductColourForm(props) {
           {errorMessage.productStock}
         </Form.Control.Feedback>
       </Form.Group>
+
       <Form.Group className="my-2">
         <Form.Label htmlFor="productBrand">Product Brand:</Form.Label>
         <Form.Control
