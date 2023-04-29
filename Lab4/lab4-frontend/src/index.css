@@ -49,3 +49,15 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+.carousel-item {
+  height: 500px;
+  object-fit: cover;
+}
+
+.carousel-item img {
+  position: absolute;
+  object-fit: cover;
+  top: 0;
+  left: 0;
+  min-height: 500px;
+}
