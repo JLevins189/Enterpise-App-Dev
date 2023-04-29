@@ -1,6 +1,10 @@
+import DeleteProductModal from "modals/DeleteProductModal";
+import { useState } from "react";
+import { Button } from "react-bootstrap";
 import Rating from "react-rating";
 
 function ProductDetailsView({ productData }) {
+  const [deleteProductModalOpen, setDeleteProductModalOpen] = useState(false);
   return (
     <div>
       <div className="mb-4">
@@ -26,8 +30,9 @@ function ProductDetailsView({ productData }) {
           fullSymbol={<i className="bi bi-star-fill"></i>}
           fractions={10}
         />
+        <span className="ms-3">{productData?.rating}/5</span>
       </div>
-      <div>
+      <div className="mb-3">
         <h3 className="d-inline-block">Availability: </h3>
         <span className="ms-3"></span>
         {productData?.stock > 0 ? (
@@ -38,6 +43,23 @@ function ProductDetailsView({ productData }) {
           </p>
         )}
       </div>
+      <div className="d-inline-block me-4">
+        <Button>Edit Product</Button>
+      </div>
+      <div className="d-inline-block">
+        <Button
+          variant="danger"
+          onClick={() => setDeleteProductModalOpen((prev) => true)}
+        >
+          Delete Product
+        </Button>
+      </div>
+      <div className="mb-4"></div>
+      <DeleteProductModal
+        modalOpen={deleteProductModalOpen}
+        setModalOpen={setDeleteProductModalOpen}
+        product={productData}
+      />
     </div>
   );
 }

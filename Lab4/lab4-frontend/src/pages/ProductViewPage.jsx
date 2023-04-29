@@ -43,13 +43,12 @@ function ProductViewPage() {
           maxWidth: "1920px",
         }}
       >
-        {/* <Explaination /> */}
         {!fetchProductRequestComplete ? (
           <LoadingSpinner />
         ) : fetchErrorOccurred ? (
           <FetchError />
         ) : (
-          <ProductView productData={productData}/>
+          <ProductView productData={productData} />
         )}
       </Container>
     </>

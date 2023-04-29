@@ -1,12 +1,11 @@
 import Form from "react-bootstrap/Form";
 
-function DeleteModalBody({ colour, colourName }) {
+function DeleteModalBody({ product }) {
   return (
     <>
-      {colour && (
+      {product && (
         <Form>
-          <h4>Are you sure you want to delete {colourName}</h4>
-          <div style={{ backgroundColor: colour, height: 50 }}></div>
+          <p>Are you sure you want to delete {product?.title}</p>
         </Form>
       )}
     </>
