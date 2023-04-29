@@ -130,11 +130,7 @@ router.post("/", async (req, res) => {
   }
 
   //Validate Price
-  if (
-    !sanitizedPrice ||
-    typeof sanitizedPrice !== "number" ||
-    isNaN(sanitizedPrice)
-  ) {
+  if (typeof sanitizedPrice !== "number" || isNaN(sanitizedPrice)) {
     return res.status(400).send({
       error: "Product Price must be a number",
       field: "productPrice",
@@ -149,7 +145,6 @@ router.post("/", async (req, res) => {
 
   //Validate Discount
   if (
-    !sanitizedDiscountPercentage ||
     typeof sanitizedDiscountPercentage !== "number" ||
     isNaN(sanitizedDiscountPercentage)
   ) {
@@ -166,11 +161,7 @@ router.post("/", async (req, res) => {
   }
 
   //Validate Rating
-  if (
-    !sanitizedRating ||
-    typeof sanitizedRating !== "number" ||
-    isNaN(sanitizedRating)
-  ) {
+  if (typeof sanitizedRating !== "number" || isNaN(sanitizedRating)) {
     return res.status(400).send({
       error: "Product Rating must be a number",
       field: "productRating",
@@ -188,13 +179,8 @@ router.post("/", async (req, res) => {
       field: "productRating",
     });
   }
-
   //Validate Stock
-  if (
-    !sanitizedStock ||
-    typeof sanitizedStock !== "number" ||
-    isNaN(sanitizedStock)
-  ) {
+  if (typeof sanitizedStock !== "number" || isNaN(sanitizedStock)) {
     return res.status(400).send({
       error: "Product Stock must be a number",
       field: "productStock",
@@ -294,7 +280,7 @@ router.put("/:id", (req, res) => {
    * Validate inputs
    */
   //Validate Title
-  if (!sanitizedTitle || sanitizedTitle.length < 4) {
+  if (sanitizedTitle.length < 4) {
     return res.status(400).send({
       error: "Product Title must be at least 4 letters",
       field: "productTitle",
@@ -328,11 +314,7 @@ router.put("/:id", (req, res) => {
   }
 
   //Validate Price
-  if (
-    !sanitizedPrice ||
-    typeof sanitizedPrice !== "number" ||
-    isNaN(sanitizedPrice)
-  ) {
+  if (typeof sanitizedPrice !== "number" || isNaN(sanitizedPrice)) {
     return res.status(400).send({
       error: "Product Price must be a number",
       field: "productPrice",
@@ -347,7 +329,6 @@ router.put("/:id", (req, res) => {
 
   //Validate Discount
   if (
-    !sanitizedDiscountPercentage ||
     typeof sanitizedDiscountPercentage !== "number" ||
     isNaN(sanitizedDiscountPercentage)
   ) {
@@ -364,11 +345,7 @@ router.put("/:id", (req, res) => {
   }
 
   //Validate Rating
-  if (
-    !sanitizedRating ||
-    typeof sanitizedRating !== "number" ||
-    isNaN(sanitizedRating)
-  ) {
+  if (typeof sanitizedRating !== "number" || isNaN(sanitizedRating)) {
     return res.status(400).send({
       error: "Product Rating must be a number",
       field: "productRating",
@@ -388,13 +365,9 @@ router.put("/:id", (req, res) => {
   }
 
   //Validate Stock
-  if (
-    !sanitizedStock ||
-    typeof sanitizedStock !== "number" ||
-    isNaN(sanitizedStock)
-  ) {
+  if (typeof sanitizedStock !== "number" || isNaN(sanitizedStock)) {
     return res.status(400).send({
-      error: "Product Rating must be a number",
+      error: "Product Stock must be a number",
       field: "productStock",
     });
   }
