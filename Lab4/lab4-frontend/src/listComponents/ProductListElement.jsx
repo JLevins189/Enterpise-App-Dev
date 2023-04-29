@@ -12,8 +12,6 @@ function ProductListElement({
   rememberedRowIndex,
   setRememberedRowIndex,
 }) {
-  console.log(productElement);
-
   // const handleEdit = () => {
   //   rememberColourIndexCookie();
   //   setSelectedColourId((prev) => colourElement?.colorId);
