@@ -19,6 +19,7 @@ function AddProductColourForm(props) {
 
   const { errorMessage, setErrorMessage } = props?.errorMessage;
 
+  const wordCharacterRegex = /^[\w\s-]+$/; //Word characters only
   const allowedCategories = [
     "smartphones",
     "laptops",
@@ -33,55 +34,189 @@ function AddProductColourForm(props) {
     productTitleRef.current?.focus();
   }, []);
 
-  // useEffect(() => {
-  //   if (colourName?.length < 3) {
-  //     setErrorMessage((prev) => ({
-  //       ...prev,
-  //       colourName: "Colour Name must be at least 3 characters",
-  //     }));
-  //     return;
-  //   }
+  useEffect(() => {
+    if (!productTitle || productTitle.length < 4) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        productTitle: "Product Title must be at least 4 characters",
+      }));
+      return;
+    }
+    if (productTitle.length > 25) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        productTitle: "Product Title must be no more than 25 characters",
+      }));
+      return;
+    }
+    if (!wordCharacterRegex.test(productTitle)) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        productTitle: "Product Title must be at least 3 characters",
+      }));
+      return;
+    }
 
-  //   if (colourName?.length >= 25) {
-  //     setErrorMessage((prev) => ({
-  //       ...prev,
-  //       colourName: "Colour Name must be 25 characters or less",
-  //     }));
-  //     return;
-  //   }
-  //   if (!colourNameRegex.test(colourName)) {
-  //     setErrorMessage((prev) => ({
-  //       ...prev,
-  //       colourName:
-  //         "Colour Name must not contain any special characters apart from - or _",
-  //     }));
-  //     return;
-  //   }
+    setErrorMessage((prev) => ({ ...prev, productTitle: null }));
+  }, [productTitle]);
 
-  //   setErrorMessage((prev) => ({ ...prev, colourName: null }));
-  // }, [colourName]);
+  useEffect(() => {
+    if (!productDescription || productDescription?.split(" ")?.length < 5) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        productDescription: "Product Description must contain at least 5 words",
+      }));
+      return;
+    }
+    if (productDescription?.split(" ")?.length > 200) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        productDescription:
+          "Product Description must contain no more than 200 words",
+      }));
+      return;
+    }
 
-  // useEffect(() => {
-  //   if (hexValue?.length < 7 || hexValue?.length > 7) {
-  //     setErrorMessage((prev) => ({
-  //       ...prev,
-  //       hexValue:
-  //         "Hex Value must be 6 hex characters following the # character",
-  //     }));
-  //     return;
-  //   }
+    setErrorMessage((prev) => ({ ...prev, productDescription: null }));
+  }, [productDescription]);
 
-  //   if (!hexValueRegex.test(hexValue)) {
-  //     setErrorMessage((prev) => ({
-  //       ...prev,
-  //       hexValue:
-  //         "Hex value must be in the format #123ABC, using hex characters only",
-  //     }));
-  //     return;
-  //   }
+  useEffect(() => {
+    console.log(typeof productPrice, productPrice);
+    if (
+      !productPrice ||
+      typeof productPrice !== "number" ||
+      isNaN(productPrice)
+    ) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        productPrice: "Product Price must be a number",
+      }));
+      return;
+    }
+    if (productPrice < 0.01) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        productPrice: "Product Price must be at least 0.01",
+      }));
+      return;
+    }
 
-  //   setErrorMessage((prev) => ({ ...prev, hexValue: null }));
-  // }, [hexValue]);
+    setErrorMessage((prev) => ({ ...prev, productPrice: null }));
+  }, [productPrice]);
+
+  useEffect(() => {
+    if (
+      !productDiscountPercentage ||
+      typeof productDiscountPercentage !== "number" ||
+      isNaN(productDiscountPercentage)
+    ) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        productDiscountPercentage: "Product Discount must be a number",
+      }));
+      return;
+    }
+    if (productDiscountPercentage < 0) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        productDiscountPercentage: "Product Discount must be at least 0",
+      }));
+      return;
+    }
+
+    setErrorMessage((prev) => ({ ...prev, productDiscountPercentage: null }));
+  }, [productDiscountPercentage]);
+
+  useEffect(() => {
+    if (
+      !productRating ||
+      typeof productRating !== "number" ||
+      isNaN(productRating)
+    ) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        productRating: "Product Rating must be a number",
+      }));
+      return;
+    }
+    if (productRating < 0) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        productRating: "Product Rating must be at least 0",
+      }));
+      return;
+    }
+    if (productRating > 5) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        productRating: "Product Rating must not be greater than 5",
+      }));
+      return;
+    }
+
+    setErrorMessage((prev) => ({ ...prev, productRating: null }));
+  }, [productRating]);
+
+  useEffect(() => {
+    if (
+      !productStock ||
+      typeof productStock !== "number" ||
+      isNaN(productStock)
+    ) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        productStock: "Product Stock must be a number",
+      }));
+      return;
+    }
+    if (productStock < 0) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        productStock: "Product Stock must be at least 0",
+      }));
+      return;
+    }
+
+    setErrorMessage((prev) => ({ ...prev, productStock: null }));
+  }, [productStock]);
+
+  useEffect(() => {
+    if (!productBrand || productBrand?.trim().length < 4) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        productBrand: "Product Brand must be at least 4 letters",
+      }));
+      return;
+    }
+    if (productBrand?.trim().length > 25) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        productBrand: "Product Brand must be less than 26 letters",
+      }));
+      return;
+    }
+    if (!wordCharacterRegex.test(productBrand)) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        productBrand: "Product Brand must only contain standard characters",
+      }));
+      return;
+    }
+
+    setErrorMessage((prev) => ({ ...prev, productBrand: null }));
+  }, [productBrand]);
+
+  useEffect(() => {
+    if (!productCategory || !allowedCategories.includes(productCategory)) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        productCategory: "Invalid category",
+      }));
+      return;
+    }
+
+    setErrorMessage((prev) => ({ ...prev, productCategory: null }));
+  }, [productCategory]);
 
   return (
     <Form>
@@ -146,29 +281,22 @@ function AddProductColourForm(props) {
         <Form.Label htmlFor="productDiscountPercentage">
           Product Discount (%):
         </Form.Label>
-        <Row>
-          <Col xs={11}>
-            <Form.Control
-              type="number"
-              step="0.01"
-              id="productDiscountPercentage"
-              autoComplete="off"
-              placeholder="e.g 10"
-              isInvalid={errorMessage?.productDiscountPercentage}
-              onChange={(event) =>
-                setProductDiscountPercentage(parseFloat(event?.target?.value))
-              } //update state on change
-              value={productDiscountPercentage} //value = state value
-              required
-            />
-          </Col>
-          <Col xs={1}>
-            <span>%</span>
-          </Col>
-        </Row>
+        <Form.Control
+          type="number"
+          step="0.01"
+          id="productDiscountPercentage"
+          autoComplete="off"
+          placeholder="e.g 10"
+          isInvalid={errorMessage?.productDiscountPercentage}
+          onChange={(event) =>
+            setProductDiscountPercentage(parseFloat(event?.target?.value))
+          } //update state on change
+          value={productDiscountPercentage} //value = state value
+          required
+        />
 
         <Form.Control.Feedback type="invalid">
-          {errorMessage.productPrice}
+          {errorMessage.productDiscountPercentage}
         </Form.Control.Feedback>
       </Form.Group>
 
