@@ -1,13 +1,22 @@
 import { useState } from "react";
 import CustomModal from "./CustomModal";
 import AddEditColourForm from "./AddEditColourForm";
-import axiosInstance from "@util/AxiosInstance";
+import axiosInstance from "util/AxiosInstance";
 import Alert from "react-bootstrap/Alert";
 
 function AddColourModal({ modalOpen, setModalOpen, setColourData }) {
   const [successAddingColour, setSuccessAddingColour] = useState(false);
-  const [colourName, setColourName] = useState("");
-  const [hexValue, setHexValue] = useState("#");
+
+  const [productTitle, setProductTitle] = useState("");
+  const [productDescription, setProductDescription] = useState("");
+  const [productPrice, setProductPrice] = useState(0.0);
+  const [productDiscountPercentage, setProductDiscountPercentage] =
+    useState(0.0);
+  const [productRating, setProductRating] = useState(0.0);
+  const [productStock, setProductStock] = useState(0);
+  const [productBrand, setProductBrand] = useState("");
+  const [productCategory, setProductCategory] = useState("");
+
   const [errorMessage, setErrorMessage] = useState({});
 
   const isButtonDisabled = () => {
@@ -57,8 +66,17 @@ function AddColourModal({ modalOpen, setModalOpen, setColourData }) {
       modalBody={
         <>
           <AddEditColourForm
-            colourName={{ colourName, setColourName }}
-            hexValue={{ hexValue, setHexValue }}
+            productTitle={{ productTitle, setProductTitle }}
+            productDescription={{ productDescription, setProductDescription }}
+            productPrice={{ productPrice, setProductPrice }}
+            productDiscountPercentage={{
+              productDiscountPercentage,
+              setProductDiscountPercentage,
+            }}
+            productRating={{ productRating, setProductRating }}
+            productStock={{ productStock, setProductStock }}
+            productBrand={{ productBrand, setProductBrand }}
+            productCategory={{ productCategory, setProductCategory }}
             errorMessage={{ errorMessage, setErrorMessage }}
           />
 

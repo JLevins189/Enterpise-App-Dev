@@ -1,127 +1,246 @@
 import { useEffect, useRef } from "react";
 import Form from "react-bootstrap/Form";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import Rating from "react-rating";
 
 function AddEditColourForm(props) {
-  const hexValueRef = useRef(null);
-  const { colourName, setColourName } = props?.colourName;
-  const { hexValue, setHexValue } = props?.hexValue;
+  const productTitleRef = useRef();
+  const { productTitle, setProductTitle } = props?.productTitle;
+  const { productDescription, setProductDescription } =
+    props?.productDescription;
+  const { productPrice, setProductPrice } = props?.productPrice;
+  const { productDiscountPercentage, setProductDiscountPercentage } =
+    props?.productDiscountPercentage;
+  const { productRating, setProductRating } = props?.productRating;
+  const { productStock, setProductStock } = props?.productStock;
+  const { productBrand, setProductBrand } = props?.productBrand;
+  const { productCategory, setProductCategory } = props?.productCategory;
+
   const { errorMessage, setErrorMessage } = props?.errorMessage;
 
-  const hexValueRegex = /^#([0-9A-F]{6})$/i; //Start = #, 6 values 0-F in Hex / 3 Hex numbers
-  const colourNameRegex = /^[\w\s-]+$/; //Word characters only
+  const allowedCategories = [
+    "smartphones",
+    "laptops",
+    "fragrances",
+    "skincare",
+    "groceries",
+    "home-decoration",
+  ];
 
   useEffect(() => {
     //Focus the input
-    hexValueRef.current?.focus();
+    productTitleRef.current?.focus();
   }, []);
 
-  useEffect(() => {
-    if (colourName?.length < 3) {
-      setErrorMessage((prev) => ({
-        ...prev,
-        colourName: "Colour Name must be at least 3 characters",
-      }));
-      return;
-    }
+  // useEffect(() => {
+  //   if (colourName?.length < 3) {
+  //     setErrorMessage((prev) => ({
+  //       ...prev,
+  //       colourName: "Colour Name must be at least 3 characters",
+  //     }));
+  //     return;
+  //   }
 
-    if (colourName?.length >= 25) {
-      setErrorMessage((prev) => ({
-        ...prev,
-        colourName: "Colour Name must be 25 characters or less",
-      }));
-      return;
-    }
-    if (!colourNameRegex.test(colourName)) {
-      setErrorMessage((prev) => ({
-        ...prev,
-        colourName:
-          "Colour Name must not contain any special characters apart from - or _",
-      }));
-      return;
-    }
+  //   if (colourName?.length >= 25) {
+  //     setErrorMessage((prev) => ({
+  //       ...prev,
+  //       colourName: "Colour Name must be 25 characters or less",
+  //     }));
+  //     return;
+  //   }
+  //   if (!colourNameRegex.test(colourName)) {
+  //     setErrorMessage((prev) => ({
+  //       ...prev,
+  //       colourName:
+  //         "Colour Name must not contain any special characters apart from - or _",
+  //     }));
+  //     return;
+  //   }
 
-    setErrorMessage((prev) => ({ ...prev, colourName: null }));
-  }, [colourName]);
+  //   setErrorMessage((prev) => ({ ...prev, colourName: null }));
+  // }, [colourName]);
 
-  useEffect(() => {
-    if (hexValue?.length < 7 || hexValue?.length > 7) {
-      setErrorMessage((prev) => ({
-        ...prev,
-        hexValue:
-          "Hex Value must be 6 hex characters following the # character",
-      }));
-      return;
-    }
+  // useEffect(() => {
+  //   if (hexValue?.length < 7 || hexValue?.length > 7) {
+  //     setErrorMessage((prev) => ({
+  //       ...prev,
+  //       hexValue:
+  //         "Hex Value must be 6 hex characters following the # character",
+  //     }));
+  //     return;
+  //   }
 
-    if (!hexValueRegex.test(hexValue)) {
-      setErrorMessage((prev) => ({
-        ...prev,
-        hexValue:
-          "Hex value must be in the format #123ABC, using hex characters only",
-      }));
-      return;
-    }
+  //   if (!hexValueRegex.test(hexValue)) {
+  //     setErrorMessage((prev) => ({
+  //       ...prev,
+  //       hexValue:
+  //         "Hex value must be in the format #123ABC, using hex characters only",
+  //     }));
+  //     return;
+  //   }
 
-    setErrorMessage((prev) => ({ ...prev, hexValue: null }));
-  }, [hexValue]);
+  //   setErrorMessage((prev) => ({ ...prev, hexValue: null }));
+  // }, [hexValue]);
 
   return (
     <Form>
-      <Form.Group>
-        <Form.Label htmlFor="colourName">Colour Name:</Form.Label>
+      <Form.Group className="my-2">
+        <Form.Label htmlFor="productTitle">Product Title:</Form.Label>
         <Form.Control
-          ref={hexValueRef}
+          ref={productTitleRef}
           type="text"
-          id="colourName"
+          id="productTitle"
+          placeholder="e.g iPhone 14"
           autoComplete="off"
-          isInvalid={errorMessage?.colourName}
-          onChange={(event) => setColourName(event.target.value)} //update state on change
-          value={colourName} //value = state value
+          isInvalid={errorMessage?.productTitle}
+          onChange={(event) => setProductTitle(event.target.value)} //update state on change
+          value={productTitle} //value = state value
           required
         />
         <Form.Control.Feedback type="invalid">
-          {errorMessage.colourName}
+          {errorMessage.productTitle}
         </Form.Control.Feedback>
       </Form.Group>
-      <Form.Group>
-        <Form.Label htmlFor="hexValue">Hex Value of Colour:</Form.Label>
-        <Form.Control
-          type="text"
-          id="hexValue"
+
+      <Form.Group className="my-2">
+        <Form.Label htmlFor="productDescription">
+          Product Description:
+        </Form.Label>
+        <textarea
+          id="productDescription"
+          className="form-control"
           autoComplete="off"
-          placeholder="#123ABC"
-          isInvalid={errorMessage?.hexValue}
-          onChange={(event) => setHexValue(event.target.value)} //update state on change
-          value={hexValue} //value = state value
+          placeholder="e.g This product features..."
+          isInvalid={errorMessage?.productDescription}
+          onChange={(event) => setProductDescription(event.target.value)} //update state on change
+          value={productDescription} //value = state value
           required
         />
         <Form.Control.Feedback type="invalid">
-          {errorMessage.hexValue}
+          {errorMessage.productDescription}
         </Form.Control.Feedback>
       </Form.Group>
 
-      <Form.Group className="my-3">
-        <SliderPicker
-          color={hexValue}
-          onChange={(color) => {
-            setHexValue(color.hex);
-          }}
+      <Form.Group className="my-2">
+        <Form.Label htmlFor="productPrice">Product Price ($):</Form.Label>
+        <Form.Control
+          type="number"
+          step="0.01"
+          id="productPrice"
+          autoComplete="off"
+          placeholder="e.g 59.99"
+          isInvalid={errorMessage?.productPrice}
+          onChange={(event) =>
+            setProductPrice(parseFloat(event?.target?.value))
+          } //update state on change
+          value={productPrice} //value = state value
+          required
         />
+        <Form.Control.Feedback type="invalid">
+          {errorMessage.productPrice}
+        </Form.Control.Feedback>
+      </Form.Group>
+
+      <Form.Group className="my-2">
+        <Form.Label htmlFor="productDiscountPercentage">
+          Product Discount (%):
+        </Form.Label>
+        <Row>
+          <Col xs={11}>
+            <Form.Control
+              type="number"
+              step="0.01"
+              id="productDiscountPercentage"
+              autoComplete="off"
+              placeholder="e.g 10"
+              isInvalid={errorMessage?.productDiscountPercentage}
+              onChange={(event) =>
+                setProductDiscountPercentage(parseFloat(event?.target?.value))
+              } //update state on change
+              value={productDiscountPercentage} //value = state value
+              required
+            />
+          </Col>
+          <Col xs={1}>
+            <span>%</span>
+          </Col>
+        </Row>
+
+        <Form.Control.Feedback type="invalid">
+          {errorMessage.productPrice}
+        </Form.Control.Feedback>
       </Form.Group>
 
       <Form.Group>
-        <span>Selected Colour:</span>
-        <div
-          className="w-100 text-center"
-          style={{
-            backgroundColor: `${hexValue}`,
-            height: 50,
-            border: "2px solid white",
-          }}
-        ></div>
+        <Form.Label htmlFor="productRating">Product Rating (0-5):</Form.Label>
+        <div className="text-center fs-5">
+          <Rating
+            initialRating={productRating}
+            emptySymbol={<i className="bi bi-star"></i>}
+            fullSymbol={<i className="bi bi-star-fill"></i>}
+            fractions={10}
+            onChange={(rating) => setProductRating(rating)}
+          />
+          <br />
+          <span>{productRating}</span>
+          <Form.Control.Feedback type="invalid">
+            {errorMessage.productPrice}
+          </Form.Control.Feedback>
+        </div>
+      </Form.Group>
+
+      <Form.Group className="mb-2">
+        <Form.Label htmlFor="productStock">Product Stock:</Form.Label>
+        <Form.Control
+          type="number"
+          step="1"
+          placeholder="e.g 10"
+          id="productStock"
+          autoComplete="off"
+          isInvalid={errorMessage?.productStock}
+          onChange={(event) => setProductStock(parseInt(event?.target?.value))} //update state on change
+          value={productStock} //value = state value
+          required
+        />
+        <Form.Control.Feedback type="invalid">
+          {errorMessage.productStock}
+        </Form.Control.Feedback>
+      </Form.Group>
+      <Form.Group className="my-2">
+        <Form.Label htmlFor="productBrand">Product Brand:</Form.Label>
+        <Form.Control
+          type="text"
+          id="productBrand"
+          placeholder="e.g Apple"
+          autoComplete="off"
+          isInvalid={errorMessage?.productBrand}
+          onChange={(event) => setProductBrand(event.target.value)} //update state on change
+          value={productBrand} //value = state value
+          required
+        />
+        <Form.Control.Feedback type="invalid">
+          {errorMessage.productBrand}
+        </Form.Control.Feedback>
+      </Form.Group>
+
+      <Form.Group className="my-2">
+        <Form.Label htmlFor="productCategory">Product Category:</Form.Label>
+        <Form.Select
+          id="productCategory"
+          // size="lg"
+          value={productCategory}
+          onChange={(e) => setProductCategory(e.target.value)}
+        >
+          {allowedCategories.map((category, i) => (
+            <option value={category} key={i}>
+              {category.charAt(0).toUpperCase() +
+                category?.substring(1, category?.length)}
+            </option>
+          ))}
+        </Form.Select>
       </Form.Group>
     </Form>
   );
 }
 export default AddEditColourForm;
-// https://medium.com/how-to-react/how-to-use-the-color-picker-in-reactjs-42a77087d93d

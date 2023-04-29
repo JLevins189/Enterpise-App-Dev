@@ -29,7 +29,7 @@ function Homepage() {
     useState(false);
   const [fetchErrorOccurred, setFetchErrorOccurred] = useState(false);
 
-  //   const [addColourModalOpen, setAddColourModalOpen] = useState(false);
+  const [addColourModalOpen, setAddColourModalOpen] = useState(false);
   //   const [editColourModalOpen, setEditColourModalOpen] = useState(false);
   //   const [deleteColourModalOpen, setDeleteColourModalOpen] = useState(false);
 
@@ -91,27 +91,22 @@ function Homepage() {
               listHeading={`All Products ${
                 productData?.length ? `(${productData?.length})` : null
               }`}
-              createElementComponent={<Button>Add New Product</Button>}
+              createElementComponent={
+                <Button onClick={() => setAddColourModalOpen(true)}>
+                  Add New Product
+                </Button>
+              }
               searchPlaceholder={"Product Name/Brand"}
               searchValue={searchQuery}
               searchOnChange={setSearchQuery}
             />
-            {/* <ProductDataList /> */}
-            <ProductDataList
-              productData={productData}
-              //   setEditColourModalOpen={setEditColourModalOpen}
-              //   setDeleteColourModalOpen={setDeleteColourModalOpen}
-              //   setSelectedColourId={setSelectedColourId}
-              //   setBackgroundColor={setBackgroundColor}
-              //   rememberedRowIndex={rememberedRowIndex}
-              //   setRememberedRowIndex={setRememberedRowIndex}
-            />
-            {/* <AddColourModal
+            <ProductDataList productData={productData} />
+            <AddColourModal
               modalOpen={addColourModalOpen}
               setModalOpen={setAddColourModalOpen}
               setColourData={setProductData}
             />
-            {editColourModalOpen && selectedColourId !== -1 && (
+            {/* {editColourModalOpen && selectedColourId !== -1 && (
               <EditColourModal
                 modalOpen={editColourModalOpen}
                 setModalOpen={setEditColourModalOpen}
