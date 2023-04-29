@@ -5,7 +5,7 @@ import ProductListHeader from "listComponents/ProductListHeader.jsx";
 import ProductDataList from "listComponents/ProductDataList.jsx";
 import LoadingSpinner from "util/LoadingSpinner.jsx";
 import FetchError from "util/FetchError.jsx";
-import AddColourModal from "modals/AddColourModal.jsx";
+import AddProductModal from "modals/AddProductModal.jsx";
 import EditColourModal from "modals/EditColourModal.jsx";
 import DeleteColourModal from "modals/DeleteColourModal.jsx";
 // import Explaination from "util/Explaination.jsx";
@@ -101,7 +101,7 @@ function Homepage() {
               searchOnChange={setSearchQuery}
             />
             <ProductDataList productData={productData} />
-            <AddColourModal
+            <AddProductModal
               modalOpen={addColourModalOpen}
               setModalOpen={setAddColourModalOpen}
               setColourData={setProductData}

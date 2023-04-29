@@ -1,10 +1,10 @@
 import { useState } from "react";
 import CustomModal from "./CustomModal";
-import AddEditColourForm from "./AddEditColourForm";
+import AddProductColourForm from "./AddEditProductForm";
 import axiosInstance from "util/AxiosInstance";
 import Alert from "react-bootstrap/Alert";
 
-function AddColourModal({ modalOpen, setModalOpen, setColourData }) {
+function AddProductModal({ modalOpen, setModalOpen, setColourData }) {
   const [successAddingColour, setSuccessAddingColour] = useState(false);
 
   const [productTitle, setProductTitle] = useState("");
@@ -65,7 +65,7 @@ function AddColourModal({ modalOpen, setModalOpen, setColourData }) {
       modalTitle={"Title"}
       modalBody={
         <>
-          <AddEditColourForm
+          <AddProductColourForm
             productTitle={{ productTitle, setProductTitle }}
             productDescription={{ productDescription, setProductDescription }}
             productPrice={{ productPrice, setProductPrice }}
@@ -104,4 +104,4 @@ function AddColourModal({ modalOpen, setModalOpen, setColourData }) {
   );
 }
 
-export default AddColourModal;
+export default AddProductModal;

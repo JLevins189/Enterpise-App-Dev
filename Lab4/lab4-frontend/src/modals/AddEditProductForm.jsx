@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Rating from "react-rating";
 
-function AddEditColourForm(props) {
+function AddProductColourForm(props) {
   const productTitleRef = useRef();
   const { productTitle, setProductTitle } = props?.productTitle;
   const { productDescription, setProductDescription } =
@@ -243,4 +243,4 @@ function AddEditColourForm(props) {
     </Form>
   );
 }
-export default AddEditColourForm;
+export default AddProductColourForm;
