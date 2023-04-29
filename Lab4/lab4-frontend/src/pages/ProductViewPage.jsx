@@ -69,7 +69,6 @@ function ProductViewPage() {
 
   return (
     <>
-      <Navbar />
       <Container
         fluid
         className="mt-4"

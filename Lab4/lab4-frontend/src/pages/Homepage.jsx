@@ -68,45 +68,42 @@ function Homepage() {
   }, [fetchProductsRequestComplete]);
 
   return (
-    <>
-      <Navbar />
-      <Container
-        fluid
-        className="mt-4"
-        style={{
-          maxWidth: "1920px",
-        }}
-      >
-        {/* <Explaination /> */}
-        {!fetchProductsRequestComplete ? (
-          <LoadingSpinner />
-        ) : fetchErrorOccurred ? (
-          <FetchError />
-        ) : (
-          <>
-            <ProductListHeader
-              listHeading={`All Products ${
-                productData?.length ? `(${productData?.length})` : null
-              }`}
-              createElementComponent={
-                <Button onClick={() => setAddColourModalOpen(true)}>
-                  Add New Product
-                </Button>
-              }
-              searchPlaceholder={"Product Name/Brand"}
-              searchValue={searchQuery}
-              searchOnChange={setSearchQuery}
-            />
-            <ProductDataList productData={productData} />
-            <AddProductModal
-              modalOpen={addColourModalOpen}
-              setModalOpen={setAddColourModalOpen}
-              setProductData={setProductData}
-            />
-          </>
-        )}
-      </Container>
-    </>
+    <Container
+      fluid
+      className="mt-4"
+      style={{
+        maxWidth: "1920px",
+      }}
+    >
+      {/* <Explaination /> */}
+      {!fetchProductsRequestComplete ? (
+        <LoadingSpinner />
+      ) : fetchErrorOccurred ? (
+        <FetchError />
+      ) : (
+        <>
+          <ProductListHeader
+            listHeading={`All Products ${
+              productData?.length ? `(${productData?.length})` : null
+            }`}
+            createElementComponent={
+              <Button onClick={() => setAddColourModalOpen(true)}>
+                Add New Product
+              </Button>
+            }
+            searchPlaceholder={"Product Name/Brand"}
+            searchValue={searchQuery}
+            searchOnChange={setSearchQuery}
+          />
+          <ProductDataList productData={productData} />
+          <AddProductModal
+            modalOpen={addColourModalOpen}
+            setModalOpen={setAddColourModalOpen}
+            setProductData={setProductData}
+          />
+        </>
+      )}
+    </Container>
   );
 }
 
