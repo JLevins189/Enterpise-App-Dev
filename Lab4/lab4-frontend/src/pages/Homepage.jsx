@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
 import axiosInstance from "util/AxiosInstance.jsx";
-import Navbar from "../Navbar.jsx";
 import ProductListHeader from "listComponents/ProductListHeader.jsx";
 import ProductDataList from "listComponents/ProductDataList.jsx";
 import LoadingSpinner from "util/LoadingSpinner.jsx";
