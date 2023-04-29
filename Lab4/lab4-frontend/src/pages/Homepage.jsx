@@ -10,27 +10,11 @@ import Button from "react-bootstrap/Button";
 
 //TODO search, add pics
 function Homepage() {
-  const cookies = useMemo(() => {
-    const cookiesArr = document?.cookie?.split("; ");
-
-    const cookieJson = {};
-    cookiesArr?.forEach((cookie) => {
-      const [cookieName, cookieValue] = cookie?.split("=");
-      cookieJson[cookieName?.trim()] = cookieValue?.trim();
-    });
-    return cookieJson;
-  }, []);
-
   const [fetchProductsRequestComplete, setFetchProductsRequestComplete] =
     useState(false);
   const [fetchErrorOccurred, setFetchErrorOccurred] = useState(false);
 
   const [addColourModalOpen, setAddColourModalOpen] = useState(false);
-  //   const [editColourModalOpen, setEditColourModalOpen] = useState(false);
-  //   const [deleteColourModalOpen, setDeleteColourModalOpen] = useState(false);
-
-  //   const [selectedColourId, setSelectedColourId] = useState(-1); //for edit/delete button
-  //   const [rememberedRowIndex, setRememberedRowIndex] = useState(-1); //for cookie functionality
 
   const [searchQuery, setSearchQuery] = useState("");
   const [productData, setProductData] = useState([]);
@@ -49,22 +33,6 @@ function Homepage() {
     };
     getAllProductData();
   }, []);
-
-  useEffect(() => {
-    console.log(cookies);
-    const lastUsedIndex = cookies?.rememberedRowIndex;
-
-    if (!lastUsedIndex) {
-      return;
-    }
-
-    setRememberedRowIndex(parseInt(lastUsedIndex));
-    const rowRef = document.getElementById(`index-${lastUsedIndex}`);
-
-    if (rowRef) {
-      rowRef.scrollIntoView({ block: "center" });
-    }
-  }, [fetchProductsRequestComplete]);
 
   return (
     <Container
