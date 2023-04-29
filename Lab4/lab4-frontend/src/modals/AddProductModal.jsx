@@ -4,8 +4,8 @@ import AddProductColourForm from "./AddEditProductForm";
 import axiosInstance from "util/AxiosInstance";
 import Alert from "react-bootstrap/Alert";
 
-function AddProductModal({ modalOpen, setModalOpen, setColourData }) {
-  const [successAddingColour, setSuccessAddingColour] = useState(false);
+function AddProductModal({ modalOpen, setModalOpen, setProductData }) {
+  const [successAddingProduct, setSuccessAddingProduct] = useState(false);
 
   const [productTitle, setProductTitle] = useState("");
   const [productDescription, setProductDescription] = useState("");
@@ -20,7 +20,17 @@ function AddProductModal({ modalOpen, setModalOpen, setColourData }) {
   const [errorMessage, setErrorMessage] = useState({});
 
   const isButtonDisabled = () => {
-    if (errorMessage?.colourName !== null || errorMessage?.hexValue !== null) {
+    if (
+      errorMessage?.productTitle !== null ||
+      errorMessage?.productDescription !== null ||
+      errorMessage?.productPrice !== null ||
+      errorMessage?.productDiscountPercentage !== null ||
+      errorMessage?.productRating !== null ||
+      errorMessage?.productStock !== null ||
+      errorMessage?.productBrand !== null ||
+      errorMessage?.productCategory !== null
+    ) {
+      console.log("disabled", errorMessage);
       return true;
     }
     return false;
@@ -28,17 +38,23 @@ function AddProductModal({ modalOpen, setModalOpen, setColourData }) {
 
   const handleAddColourRequest = async () => {
     try {
-      const response = await axiosInstance.post("/colours", {
-        hexString: hexValue,
-        name: colourName,
+      const response = await axiosInstance.post("/products", {
+        productTitle,
+        productDescription,
+        productPrice,
+        productDiscountPercentage,
+        productRating,
+        productStock,
+        productBrand,
+        productCategory,
       });
 
       //success
       if (response?.status === 201) {
         //Add to current list
-        setColourData((prev) => [...prev, response?.data]);
+        setProductData((prev) => [...prev, response?.data]);
         //Add success alert
-        setSuccessAddingColour((prev) => true);
+        setSuccessAddingProduct((prev) => true);
         //Clear error
         setErrorMessage((prev) => ({
           ...prev,
@@ -48,7 +64,7 @@ function AddProductModal({ modalOpen, setModalOpen, setColourData }) {
     } catch (err) {
       console.log(err);
       //Remove success alert
-      setSuccessAddingColour((prev) => false);
+      setSuccessAddingProduct((prev) => false);
 
       //Show error alert
       setErrorMessage((prev) => ({
@@ -90,7 +106,7 @@ function AddProductModal({ modalOpen, setModalOpen, setColourData }) {
           ) : null}
 
           {/* success alert */}
-          {successAddingColour ? (
+          {successAddingProduct ? (
             <Alert variant="success" className="mt-3">
               Colour added successfully
             </Alert>

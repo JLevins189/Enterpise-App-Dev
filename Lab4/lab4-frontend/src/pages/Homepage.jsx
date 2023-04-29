@@ -104,7 +104,7 @@ function Homepage() {
             <AddProductModal
               modalOpen={addColourModalOpen}
               setModalOpen={setAddColourModalOpen}
-              setColourData={setProductData}
+              setProductData={setProductData}
             />
             {/* {editColourModalOpen && selectedColourId !== -1 && (
               <EditColourModal
