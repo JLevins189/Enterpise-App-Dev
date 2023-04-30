@@ -15,7 +15,8 @@ function AddProductModal({ modalOpen, setModalOpen, setProductData }) {
   const [productRating, setProductRating] = useState(0.0);
   const [productStock, setProductStock] = useState(0);
   const [productBrand, setProductBrand] = useState("");
-  const [productCategory, setProductCategory] = useState("");
+  const [productCategory, setProductCategory] = useState(null);
+  const [productImages, setProductImages] = useState([]);
 
   const [errorMessage, setErrorMessage] = useState({});
 
@@ -28,25 +29,43 @@ function AddProductModal({ modalOpen, setModalOpen, setProductData }) {
       errorMessage?.productRating !== null ||
       errorMessage?.productStock !== null ||
       errorMessage?.productBrand !== null ||
+      errorMessage?.productImages !== null ||
       errorMessage?.productCategory !== null
     ) {
+      console.log(errorMessage, productCategory);
       return true;
     }
     return false;
   };
 
+  const getFormData = (object) => {
+    const formData = new FormData();
+    console.log(object);
+    Object.keys(object).forEach((key) => formData.append(key, object[key]));
+    productImages.forEach((image, index) => {
+      formData.append("images", image, `image_${index}`);
+    });
+    return formData;
+  };
+
   const handleAddProductRequest = async () => {
     try {
-      const response = await axiosInstance.post("/products", {
-        productTitle,
-        productDescription,
-        productPrice,
-        productDiscountPercentage,
-        productRating,
-        productStock,
-        productBrand,
-        productCategory,
-      });
+      const response = await axiosInstance.post(
+        "/products",
+        getFormData({
+          productTitle,
+          productDescription,
+          productPrice,
+          productDiscountPercentage,
+          productRating,
+          productStock,
+          productBrand,
+          productCategory,
+        }),
+        {
+          headers: { "Content-Type": "multipart/form-data" }, // Set the appropriate content type for file uploads
+        }
+      );
 
       //success
       if (response?.status === 201) {
@@ -92,6 +111,7 @@ function AddProductModal({ modalOpen, setModalOpen, setProductData }) {
             productRating={{ productRating, setProductRating }}
             productStock={{ productStock, setProductStock }}
             productBrand={{ productBrand, setProductBrand }}
+            productImages={{ productImages, setProductImages }}
             productCategory={{ productCategory, setProductCategory }}
             errorMessage={{ errorMessage, setErrorMessage }}
           />

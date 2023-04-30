@@ -13,6 +13,7 @@ function AddProductForm(props) {
   const { productRating, setProductRating } = props?.productRating;
   const { productStock, setProductStock } = props?.productStock;
   const { productBrand, setProductBrand } = props?.productBrand;
+  const { productImages, setProductImages } = props?.productImages;
   const { productCategory, setProductCategory } = props?.productCategory;
 
   const { errorMessage, setErrorMessage } = props?.errorMessage;
@@ -79,12 +80,7 @@ function AddProductForm(props) {
   }, [productDescription]);
 
   useEffect(() => {
-    console.log(typeof productPrice, productPrice);
-    if (
-      !productPrice ||
-      typeof productPrice !== "number" ||
-      isNaN(productPrice)
-    ) {
+    if (typeof productPrice !== "number" || isNaN(productPrice)) {
       setErrorMessage((prev) => ({
         ...prev,
         productPrice: "Product Price must be a number",
@@ -104,7 +100,6 @@ function AddProductForm(props) {
 
   useEffect(() => {
     if (
-      !productDiscountPercentage ||
       typeof productDiscountPercentage !== "number" ||
       isNaN(productDiscountPercentage)
     ) {
@@ -121,16 +116,19 @@ function AddProductForm(props) {
       }));
       return;
     }
+    if (productDiscountPercentage > 99) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        productDiscountPercentage: "Product Discount must less than 100",
+      }));
+      return;
+    }
 
     setErrorMessage((prev) => ({ ...prev, productDiscountPercentage: null }));
   }, [productDiscountPercentage]);
 
   useEffect(() => {
-    if (
-      !productRating ||
-      typeof productRating !== "number" ||
-      isNaN(productRating)
-    ) {
+    if (typeof productRating !== "number" || isNaN(productRating)) {
       setErrorMessage((prev) => ({
         ...prev,
         productRating: "Product Rating must be a number",
@@ -156,11 +154,7 @@ function AddProductForm(props) {
   }, [productRating]);
 
   useEffect(() => {
-    if (
-      !productStock ||
-      typeof productStock !== "number" ||
-      isNaN(productStock)
-    ) {
+    if (typeof productStock !== "number" || isNaN(productStock)) {
       setErrorMessage((prev) => ({
         ...prev,
         productStock: "Product Stock must be a number",
@@ -205,6 +199,18 @@ function AddProductForm(props) {
   }, [productBrand]);
 
   useEffect(() => {
+    if (productImages?.length < 1) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        productImages: "Product Images must contain at least 1 image",
+      }));
+      return;
+    }
+
+    setErrorMessage((prev) => ({ ...prev, productImages: null }));
+  }, [productImages]);
+
+  useEffect(() => {
     if (!productCategory || !allowedCategories.includes(productCategory)) {
       setErrorMessage((prev) => ({
         ...prev,
@@ -235,7 +241,6 @@ function AddProductForm(props) {
           {errorMessage.productTitle}
         </Form.Control.Feedback>
       </Form.Group>
-
       <Form.Group className="my-2">
         <Form.Label htmlFor="productDescription">
           Product Description:
@@ -259,7 +264,6 @@ function AddProductForm(props) {
           {errorMessage.productDescription}
         </Form.Control.Feedback>{" "}
       </Form.Group>
-
       <Form.Group className="my-2">
         <Form.Label htmlFor="productPrice">Product Price ($):</Form.Label>
         <Form.Control
@@ -279,7 +283,6 @@ function AddProductForm(props) {
           {errorMessage.productPrice}
         </Form.Control.Feedback>
       </Form.Group>
-
       <Form.Group className="my-2">
         <Form.Label htmlFor="productDiscountPercentage">
           Product Discount (%):
@@ -302,7 +305,6 @@ function AddProductForm(props) {
           {errorMessage.productDiscountPercentage}
         </Form.Control.Feedback>
       </Form.Group>
-
       <Form.Group>
         <Form.Label htmlFor="productRating">Product Rating (0-5):</Form.Label>
         <div className="text-center fs-5 text-primary">
@@ -314,13 +316,12 @@ function AddProductForm(props) {
             onChange={(rating) => setProductRating(rating)}
           />
           <br />
-          <span>{productRating}</span>
+          <span className="is-invalid">{productRating}</span>
           <Form.Control.Feedback type="invalid">
-            {errorMessage.productPrice}
+            {errorMessage.productRating}
           </Form.Control.Feedback>
         </div>
       </Form.Group>
-
       <Form.Group className="mb-2">
         <Form.Label htmlFor="productStock">Product Stock:</Form.Label>
         <Form.Control
@@ -338,7 +339,6 @@ function AddProductForm(props) {
           {errorMessage.productStock}
         </Form.Control.Feedback>
       </Form.Group>
-
       <Form.Group className="my-2">
         <Form.Label htmlFor="productBrand">Product Brand:</Form.Label>
         <Form.Control
@@ -357,13 +357,31 @@ function AddProductForm(props) {
       </Form.Group>
 
       <Form.Group className="my-2">
+        <Form.Label>Product Images:</Form.Label>
+        <Form.Control
+          type="file"
+          accept="image/*"
+          isInvalid={errorMessage?.productImages}
+          multiple
+          onChange={(e) => setProductImages(Array.from(e.target.files))}
+        />
+        <Form.Control.Feedback type="invalid">
+          {errorMessage.productImages}
+        </Form.Control.Feedback>
+      </Form.Group>
+      <Form.Group className="my-2">
         <Form.Label htmlFor="productCategory">Product Category:</Form.Label>
         <Form.Select
           id="productCategory"
+          isInvalid={errorMessage?.productCategory}
           // size="lg"
           value={productCategory}
           onChange={(e) => setProductCategory(e.target.value)}
         >
+          <option value="" selected disabled hidden>
+            Choose here
+          </option>
+
           {allowedCategories.map((category, i) => (
             <option value={category} key={i}>
               {category.charAt(0).toUpperCase() +
@@ -371,6 +389,10 @@ function AddProductForm(props) {
             </option>
           ))}
         </Form.Select>
+
+        <Form.Control.Feedback type="invalid">
+          {errorMessage.productCategory}
+        </Form.Control.Feedback>
       </Form.Group>
     </Form>
   );

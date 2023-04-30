@@ -4,6 +4,16 @@ const fs = require("fs");
 const Product = require("../models/productSchema");
 const router = express.Router();
 
+//Imgs
+const multer = require("multer");
+const storage = multer.diskStorage({
+  destination: "uploads/", // Specify the directory where uploaded files will be stored
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "_" + file.originalname); // <-- CHANGE HERE
+  },
+});
+const upload = multer({ storage });
+
 const cacheExpiry = 30 * 1000; //30sec - allow updated values to reflect on refresh
 const wordCharacterRegex = /^[\w\s-]+$/; //Word characters only
 const allowedCategories = [
@@ -70,18 +80,29 @@ const getHighestId = async () => {
   return Product.find().sort({ id: -1 }).limit(1);
 };
 
-router.post("/", async (req, res) => {
-  //TODO generate these fields
-  //Images
-  //Thumbnail
-  const highestIdProduct = await getHighestId().catch((err) =>
-    console.error(err)
-  );
+router.post("/", upload.array("images"), async (req, res) => {
+  //TODO generate these fields   //Thumbnail
+  const highestIdProduct = await getHighestId().catch((err) => {
+    console.error(err);
+    return res.status(500).send({
+      error: "An unknown error occurred",
+    });
+  });
 
   const productId = highestIdProduct[0]?.id + 1;
 
-  const sanitizedTitle = req?.bodyString("productTitle");
-  const sanitizedDescription = req?.bodyString("productDescription");
+  //Images
+  if (!req?.files?.length) {
+    return res
+      .status(500)
+      .send({ error: "No Images provided", field: "images" });
+  }
+  const urls = req.files.map((file) => {
+    return `${req.protocol}://${req.get("host")}/uploads/${file.filename}`;
+  });
+
+  const sanitizedTitle = req?.bodyString("productTitle")?.trim();
+  const sanitizedDescription = req?.bodyString("productDescription")?.trim();
   const sanitizedPrice = req.bodyFloat("productPrice");
   const sanitizedDiscountPercentage = req.bodyFloat(
     "productDiscountPercentage"
@@ -89,7 +110,7 @@ router.post("/", async (req, res) => {
 
   const sanitizedRating = req.bodyFloat("productRating");
   const sanitizedStock = req.bodyInt("productStock");
-  const sanitizedBrand = req.bodyString("productBrand");
+  const sanitizedBrand = req.bodyString("productBrand")?.trim();
   const sanitizedCategory = req.bodyOneOf("productCategory", allowedCategories);
 
   /*
@@ -232,13 +253,7 @@ router.post("/", async (req, res) => {
     brand: sanitizedBrand,
     category: sanitizedCategory,
     thumbnail: "https://i.dummyjson.com/data/products/1/thumbnail.jpg",
-    images: [
-      "https://i.dummyjson.com/data/products/1/1.jpg",
-      "https://i.dummyjson.com/data/products/1/2.jpg",
-      "https://i.dummyjson.com/data/products/1/3.jpg",
-      "https://i.dummyjson.com/data/products/1/4.jpg",
-      "https://i.dummyjson.com/data/products/1/thumbnail.jpg",
-    ],
+    images: urls,
   });
 
   newProduct

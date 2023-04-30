@@ -20,6 +20,8 @@ app.use(cors({ origin: allowedOrigins }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 app.use(routes);
 
 app.listen(serverPort, () => {

@@ -80,11 +80,7 @@ function EditProductForm(props) {
 
   useEffect(() => {
     console.log(typeof productPrice, productPrice);
-    if (
-      !productPrice ||
-      typeof productPrice !== "number" ||
-      isNaN(productPrice)
-    ) {
+    if (typeof productPrice !== "number" || isNaN(productPrice)) {
       setErrorMessage((prev) => ({
         ...prev,
         productPrice: "Product Price must be a number",
@@ -104,7 +100,6 @@ function EditProductForm(props) {
 
   useEffect(() => {
     if (
-      !productDiscountPercentage ||
       typeof productDiscountPercentage !== "number" ||
       isNaN(productDiscountPercentage)
     ) {
@@ -121,16 +116,19 @@ function EditProductForm(props) {
       }));
       return;
     }
+    if (productDiscountPercentage > 99) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        productDiscountPercentage: "Product Discount must less than 100",
+      }));
+      return;
+    }
 
     setErrorMessage((prev) => ({ ...prev, productDiscountPercentage: null }));
   }, [productDiscountPercentage]);
 
   useEffect(() => {
-    if (
-      !productRating ||
-      typeof productRating !== "number" ||
-      isNaN(productRating)
-    ) {
+    if (typeof productRating !== "number" || isNaN(productRating)) {
       setErrorMessage((prev) => ({
         ...prev,
         productRating: "Product Rating must be a number",
@@ -272,9 +270,9 @@ function EditProductForm(props) {
             onChange={(rating) => setProductRating(rating)}
           />
           <br />
-          <span>{productRating}</span>
+          <span className="is-invalid">{productRating}</span>
           <Form.Control.Feedback type="invalid">
-            {errorMessage.productPrice}
+            {errorMessage.productRating}
           </Form.Control.Feedback>
         </div>
       </Form.Group>
@@ -330,6 +328,10 @@ function EditProductForm(props) {
             </option>
           ))}
         </Form.Select>
+
+        <Form.Control.Feedback type="invalid">
+          {errorMessage.productCategory}
+        </Form.Control.Feedback>
       </Form.Group>
     </Form>
   );
