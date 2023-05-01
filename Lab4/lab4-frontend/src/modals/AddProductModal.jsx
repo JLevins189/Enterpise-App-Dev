@@ -63,7 +63,7 @@ function AddProductModal({ modalOpen, setModalOpen, setProductData }) {
           productCategory,
         }),
         {
-          headers: { "Content-Type": "multipart/form-data" }, // Set the appropriate content type for file uploads
+          headers: { "Content-Type": "multipart/form-data" }, 
         }
       );
 

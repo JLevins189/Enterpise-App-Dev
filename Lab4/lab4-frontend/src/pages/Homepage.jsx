@@ -8,7 +8,6 @@ import AddProductModal from "modals/AddProductModal.jsx";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 
-//TODO search, add pics
 function Homepage() {
   const [fetchProductsRequestComplete, setFetchProductsRequestComplete] =
     useState(false);
@@ -17,7 +16,34 @@ function Homepage() {
   const [addProductModalOpen, setAddProductModalOpen] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [chosenCategory, setChosenCategory] = useState("");
   const [productData, setProductData] = useState([]);
+
+  const filteredProducts = useMemo(() => {
+    if (productData?.length < 1) {
+      return [];
+    }
+    //Apply category filter if "all" not chosen
+    const filteredByCategory =
+      chosenCategory === "all" || !chosenCategory
+        ? productData
+        : productData?.filter(
+            (product) => product?.category === chosenCategory
+          );
+    return filteredByCategory?.filter((product) => {
+      return (
+        //Search query
+        product?.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product?.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (product?.title + " " + product?.brand)
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        (product?.brand + " " + product?.title)
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
+      );
+    });
+  }, [searchQuery, chosenCategory, productData]);
 
   useEffect(() => {
     const getAllProductData = async () => {
@@ -42,7 +68,6 @@ function Homepage() {
         maxWidth: "1920px",
       }}
     >
-      {/* <Explaination /> */}
       {!fetchProductsRequestComplete ? (
         <LoadingSpinner />
       ) : fetchErrorOccurred ? (
@@ -61,8 +86,13 @@ function Homepage() {
             searchPlaceholder={"Product Name/Brand"}
             searchValue={searchQuery}
             searchOnChange={setSearchQuery}
+            chosenCategory={chosenCategory}
+            setChosenCategory={setChosenCategory}
           />
-          <ProductDataList productData={productData} />
+          <ProductDataList
+            productData={productData}
+            filteredProducts={filteredProducts}
+          />
           <AddProductModal
             modalOpen={addProductModalOpen}
             setModalOpen={setAddProductModalOpen}
