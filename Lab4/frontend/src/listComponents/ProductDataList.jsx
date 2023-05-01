@@ -11,6 +11,10 @@ function ProductDataList({ productData, filteredProducts }) {
   const getPageItems = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
+    console.log(totalPages, currentPage);
+    if (totalPages < currentPage) {
+      setCurrentPage(totalPages);
+    }
     return filteredProducts?.slice(startIndex, endIndex);
   };
   return (
