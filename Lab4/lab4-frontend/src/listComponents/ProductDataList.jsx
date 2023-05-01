@@ -6,12 +6,7 @@ import { Pagination } from "react-bootstrap";
 function ProductDataList({ productData, filteredProducts }) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
-  // Calculate total number of pages
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-
-  // const handlePageChange = (page) => {
-  //   setCurrentPage(page);
-  // };
 
   const getPageItems = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
